@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Tailwind Drawer with Header Shift</title>
+    <!-- Tailwind CSS CDN (최신 안정화 버전 사용) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+
+</head>
+<body class="bg-gray-900 text-gray-200 font-sans">
+<!-- 헤더: 토글 버튼 포함 -->
+<header id="header" class="bg-gray-800 py-4 px-8 flex items-center transition-all duration-300">
+    <div class="hover:bg-[#b4b4b4] w-10 h-10 flex items-center justify-center rounded cursor-pointer">
+    <svg id="toggleDrawer" class="w-6 h-6 text-gray-800 dark:text-white"
+             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 14">
+            <path d="M16 2H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 0 1 0 2Z"/>
+        </svg>
+    </div>
+    <h1 class="text-2xl font-bold text-white ml-3">ChatGPT-like UI</h1>
+</header>
+
+<!-- 메인 영역: 드로어와 콘텐츠 영역 -->
+<div class="flex transition-all duration-300">
+    <!-- 왼쪽 드로어: 기본적으로 숨김 (-translate-x-full 사용) -->
+    <aside id="drawer"
+           class="fixed top-0 left-0 h-full w-64 bg-gray-800 p-4 transform -translate-x-full transition-transform duration-300 z-10">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-9 h-9 humbleicons mb-3 hi-folder-add">
+            <g xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2"><path stroke-linejoin="round" d="M3 18V6a2 2 0 012-2h4.539a2 2 0 011.562.75L12.2 6.126a1 1 0 00.78.375H20a1 1 0 011 1V18a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path stroke-linecap="round" d="M9.5 12.5h5M12 15v-5"/></g></svg>
+        <nav>
+            <ul class="space-y-2">
+                <li><a href="#" class="text-gray-300 hover:text-white">대시보드</a></li>
+                <li><a href="#" class="text-gray-300 hover:text-white">모델 관리</a></li>
+                <li><a href="#" class="text-gray-300 hover:text-white">설정</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- 메인 콘텐츠 영역 -->
+    <main id="content" class="flex flex-col flex-1 h-[90vh] xl:px-48 py-6 transition-all duration-300">
+        <!-- 채팅 영역 -->
+        <section id="chatArea" class="flex-1 p-4 overflow-y-auto space-y-4">
+            <!-- 초기 AI 메시지 -->
+            <div class="flex">
+                <div class="bg-gray-600 p-3 rounded-lg max-w-md text-white">
+                    안녕하세요. 무엇을 도와드릴까요?
+                </div>
+            </div>
+            <!-- 초기 사용자 메시지 -->
+            <div class="flex justify-end">
+                <div class="bg-blue-600 p-3 rounded-lg max-w-md text-white">
+                    지금 상태를 보여주세요.
+                </div>
+            </div>
+        </section>
+
+
+        <!-- 입력창 영역: 항상 하단에 위치 -->
+        <div class="border-t border-gray-700 p-4">
+            <form id="chatForm" class="flex">
+                <textarea id="chatInput" placeholder="메시지를 입력하세요..." autocomplete="off"
+                          class="flex-1 px-4 py-2 rounded-l-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+                          rows="3"></textarea>
+
+
+                <button type="submit"
+                        class="px-4 py-2 bg-blue-600 rounded-r-md hover:bg-blue-700 text-white font-bold">
+                    전송
+                </button>
+            </form>
+        </div>
+
+
+    </main>
+</div>
+
+<!-- JavaScript: 드로어 토글 로직 (헤더와 메인 콘텐츠 모두 이동) -->
+<script>
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggleButton = document.getElementById('toggleDrawer');
+        const drawer = document.getElementById('drawer');
+        const header = document.getElementById('header');
+        const content = document.getElementById('content');
+        let drawerOpen = false;
+
+        toggleButton.addEventListener('click', function () {
+            drawerOpen = !drawerOpen;
+            if (drawerOpen) {
+                // 드로어 슬라이드 인
+                drawer.classList.remove('-translate-x-full');
+                // 헤더와 콘텐츠 영역에 왼쪽 마진 추가 (드로어 너비만큼, w-64)
+                header.classList.add('ml-64');
+                content.classList.add('ml-64');
+            } else {
+                // 드로어 슬라이드 아웃
+                drawer.classList.add('-translate-x-full');
+                header.classList.remove('ml-64');
+                content.classList.remove('ml-64');
+            }
+        });
+
+
+        // 문서의 다른 영역 클릭 시 드로어 자동 닫힘
+        document.addEventListener('click', function (e) {
+            // 드로어가 열려 있고, 클릭한 대상이 드로어 내부나 토글 버튼이 아니라면
+            if (drawerOpen && !drawer.contains(e.target) && e.target !== toggleButton) {
+                drawer.classList.add('-translate-x-full');
+                header.classList.remove('ml-64');
+                content.classList.remove('ml-64');
+                drawerOpen = false;
+            }
+        });
+    });
+
+
+</script>
+</body>
+</html>

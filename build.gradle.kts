@@ -30,8 +30,12 @@ extra["springAiVersion"] = "1.0.0-M5"
 
 dependencies {
 
-    implementation("io.github.microutils:kotlin-logging:3.0.4")
+    implementation("org.mvnpm:flowbite:3.1.1")
+    implementation("org.webjars.npm:tailwindcss:4.0.0")
+    implementation("org.webjars.npm:htmx.org:2.0.4")
 
+
+    implementation("io.github.microutils:kotlin-logging:3.0.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")
 
     implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.5.4")
