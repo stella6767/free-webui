@@ -14,7 +14,7 @@
 <!-- 헤더: 토글 버튼 포함 -->
 <header id="header" class="bg-gray-800 py-4 px-8 flex items-center transition-all duration-300">
     <div class="hover:bg-[#b4b4b4] w-10 h-10 flex items-center justify-center rounded cursor-pointer">
-    <svg id="toggleDrawer" class="w-6 h-6 text-gray-800 dark:text-white"
+        <svg id="toggleDrawer" class="w-6 h-6 text-gray-800 dark:text-white"
              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 14">
             <path d="M16 2H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 0 1 0 2Z"/>
         </svg>
@@ -27,8 +27,14 @@
     <!-- 왼쪽 드로어: 기본적으로 숨김 (-translate-x-full 사용) -->
     <aside id="drawer"
            class="fixed top-0 left-0 h-full w-64 bg-gray-800 p-4 transform -translate-x-full transition-transform duration-300 z-10">
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24" class="w-9 h-9 humbleicons mb-3 hi-folder-add">
-            <g xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2"><path stroke-linejoin="round" d="M3 18V6a2 2 0 012-2h4.539a2 2 0 011.562.75L12.2 6.126a1 1 0 00.78.375H20a1 1 0 011 1V18a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path stroke-linecap="round" d="M9.5 12.5h5M12 15v-5"/></g></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+             class="w-9 h-9 humbleicons mb-3 hi-folder-add">
+            <g xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2">
+                <path stroke-linejoin="round"
+                      d="M3 18V6a2 2 0 012-2h4.539a2 2 0 011.562.75L12.2 6.126a1 1 0 00.78.375H20a1 1 0 011 1V18a1 1 0 01-1 1H4a1 1 0 01-1-1z"/>
+                <path stroke-linecap="round" d="M9.5 12.5h5M12 15v-5"/>
+            </g>
+        </svg>
         <nav>
             <ul class="space-y-2">
                 <li><a href="#" class="text-gray-300 hover:text-white">대시보드</a></li>
@@ -64,12 +70,14 @@
                           class="flex-1 px-4 py-2 rounded-l-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
                           rows="3"></textarea>
 
-
-                <button type="submit"
-                        class="px-4 py-2 bg-blue-600 rounded-r-md hover:bg-blue-700 text-white font-bold">
-                    전송
+                <button type="submit" class="px-4 py-2 bg-gray-700 rounded-r-md hover:bg-blue-700 text-white font-bold flex items-center justify-center">
+                    <svg class="w-6 h-6" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4"/>
+                    </svg>
                 </button>
+
             </form>
+
         </div>
 
 

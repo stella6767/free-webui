@@ -5,22 +5,17 @@ import kotlinx.html.dom.createHTMLDocument
 import kotlinx.html.dom.serialize
 import kotlinx.html.stream.createHTML
 
-fun renderPageWithLayout(bodyContent: DIV.() -> Unit): String {
+fun renderPageWithLayout(bodyContent: BODY.() -> Unit): String {
     return writePage {
         defaultHeader()
         body {
             attributes["xmlns:hx-on"] = "http://www.w3.org/1999/xhtml"
-            //navbar()
-
-            defaultBody {
-                bodyContent()
-            }
-
-            defaultFooter()
+            id = "content-body"
+            classes = setOf("bg-gray-900", "text-gray-200", "font-sans")
+            bodyContent()
         }
     }
 }
-
 
 fun renderComponent(div: DIV.() -> Unit): String {
     return createHTML().div {
@@ -34,35 +29,26 @@ inline fun writePage(crossinline block: HTML.() -> Unit): String {
     }.serialize()
 }
 
-fun BODY.defaultBody(content: DIV.() -> Unit) {
 
-    div {
-        id = "content-body"
-        classes = setOf("py-3")
-        //progressView()
-        div {
-            id = "toast"
-        }
-        content()
-        //loginModalView()
-    }
-}
 
 
 private fun HTML.defaultHeader() {
     head {
         script {
-            src = "webjars/htmx.org/2.0.4/htmx.min.js"
+            src = "/js/htmx.min.js"
+        }
+        script {
+            src = "/js/tailwind.min.js"
+        }
+        script {
+            src = "/js/flowbite.min.js"
+            defer = true
         }
         link {
             rel = "stylesheet"
-            href = "webjars/tailwindcss/4.0.0/tailwind.min.css"
+            href = "/css/flowbite.min.css"
         }
 
-        script {
-            src = "/js/client.js"
-            defer = true
-        }
 
         meta {
             httpEquiv = "Content-Type"
@@ -73,40 +59,7 @@ private fun HTML.defaultHeader() {
         meta(name = "keywords", content = arrayOf("Kotlin", "htmx").joinToString(","))
         meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
 
-
-        style {
-            unsafe {
-                raw(
-                    """
-                        @media (prefers-color-scheme:dark){
-                            body{
-                                color:white;
-                                background:white;
-                            }
-                        }
-                       """
-                )
-            }
-        }
-
     }
 }
 
-
-fun BODY.defaultFooter() {
-
-    footer("footer footer-center p-4 bg-base-300 text-base-content ") {
-        id = "footer"
-
-        div {
-            p { +"""Created by Stella6767""" }
-            a {
-                href = "https://github.com/stella6767"
-                target = "_blank"
-                style = "text-decoration: none;"
-                +"""GitHub"""
-            }
-        }
-    }
-}
 
