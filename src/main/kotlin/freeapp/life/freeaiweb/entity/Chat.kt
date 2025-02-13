@@ -1,15 +1,13 @@
 package freeapp.life.freeaiweb.entity
 
 class Chat(
-    model: String,
     id: Long,
+    model: String,
     name:String,
     host:String,
-    systemPrompt:String,
     temperature:Double,
     topP: Double,
     topK: Int,
-
 ) {
 
     var id = id
@@ -17,11 +15,10 @@ class Chat(
     var name = name
     var model = model
     var host = host
-    var systemPrompt = systemPrompt
     var temperature = temperature
     var topP = topP
     var topK = topK
 
     var messages: MutableList<Message> = mutableListOf()
-    
+
 }

@@ -21,11 +21,6 @@ open class G(initialAttributes: Map<String, String>, override val consumer: TagC
     HTMLTag("g", consumer, initialAttributes, null, false, false), HtmlBlockTag
 
 
-@HtmlTagMarker
-inline fun DIV.markDown(classes: String? = null, crossinline block: MDBLOCK.() -> Unit = {}): Unit = MDBLOCK (
-    attributesMapOf("class", classes), consumer
-).visit(block)
-
-@Suppress("unused")
-open class MDBLOCK(initialAttributes: Map<String, String>, override val consumer: TagConsumer<*>) :
-    HTMLTag("md-block", consumer, initialAttributes, null, false, false), HtmlBlockTag {}
+fun Tag.customAttr(name: String, value: String) {
+    attributes[name] = value
+}

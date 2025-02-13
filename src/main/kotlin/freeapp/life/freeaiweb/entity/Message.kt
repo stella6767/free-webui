@@ -2,7 +2,8 @@ package freeapp.life.freeaiweb.entity
 
 class Message(
     id:Long,
-    response:String,
+    msg:String,
+    isAi:Boolean,
     chat: Chat,
 ) {
 

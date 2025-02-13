@@ -1,9 +1,9 @@
 package freeapp.life.freeaiweb.view
 
 import freeapp.life.freeaiweb.util.g
-import freeapp.life.freeaiweb.util.markDown
 import freeapp.life.freeaiweb.util.path
 import kotlinx.html.*
+import java.util.UUID
 
 
 fun BODY.indexView() {
@@ -19,15 +19,9 @@ fun BODY.indexView() {
 }
 
 
-fun DIV.aiResponseView() {
-
-    div {
-        id = "ai-response"
-    }
 
 
 
-}
 
 
 fun DIV.chatMsgView(
@@ -38,7 +32,23 @@ fun DIV.chatMsgView(
     div("flex justify-end") {
         div("bg-[#414158] p-3 rounded-lg max-w-md text-white") { +msg }
     }
+
+    div {
+        id = "ai-response-div"
+    }
+
 }
+
+fun DIV.aiResponseView() {
+
+    div {
+        id = "ai-response"
+    }
+}
+
+
+
+
 
 
 fun DIV.mainContentView() {
@@ -49,6 +59,7 @@ fun DIV.mainContentView() {
         section {
             chatAreaView()
         }
+
         div {
             chatFormView()
         }
@@ -63,10 +74,38 @@ fun SECTION.chatAreaView() {
     div("flex") {
         div("bg-gray-600 p-3 rounded-lg max-w-md text-white") { +"""안녕하세요. 무엇을 도와드릴까요?""" }
     }
-
-
-
+    div {
+        sseConnectView()
+    }
 }
+
+
+fun DIV.sseConnectView(
+    clientId:String = ""
+){
+    val connectionId = clientId.ifEmpty {
+        UUID.randomUUID().toString()
+    }
+    input {
+        type = InputType.hidden
+        id = "client-id"
+        name = "clientId"
+        value = connectionId
+    }
+    div {
+        id = "sse-listener"
+        attributes["hx-ext"] = "sse"
+        attributes["sse-connect"] = "/chat-sse/${connectionId}"
+        attributes["sse-swap"] = "ai-response"
+        attributes["hx-target"] = "#ai-response-div"
+    }
+}
+fun DIV.chatatat(){
+    div {
+        attributes["hx-swap-oob"] = "outerHTML:#message-container"
+    }
+}
+
 
 fun HEADER.headerView() {
 
@@ -183,16 +222,11 @@ fun DIV.chatFormView() {
         id = "chatForm"
         classes = setOf("flex")
         attributes["hx-post"] = "/chat"
+        attributes["hx-include"] = "#client-id"
         attributes["hx-target"] = "#chatArea"
         attributes["hx-swap"] = "beforeend"
-        attributes["hx-trigger"] = "keydown[!shiftKey && key=='Enter'] from:#chat-input, click from:#chat-input-btn"
-        attributes["hx-on"] = "htmx:afterRequest: document.getElementById('chat-input').value = ''"
-
-        input {
-            type = InputType.hidden
-            id = "client-id"
-            name = "clientId"
-        }
+        attributes["hx-trigger"] = "keydown[!shiftKey && key=='Enter'] from:#chatInput, click from:#chat-input-btn"
+        attributes["hx-on--after-request"] = "javascript:document.getElementById('chatInput').value = ''"
 
         textArea {
             id = "chatInput"

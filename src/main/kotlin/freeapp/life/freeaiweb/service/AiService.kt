@@ -7,6 +7,7 @@ import mu.KotlinLogging
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 
 
@@ -41,35 +42,50 @@ class AiService(
             .doOnNext {chunk ->
                 streamText += chunk
 
-                if (streamText.contains(".")) {
-                    val segments =
-                        streamText.split(".")
-                    val completeSegments =
-                        segments.dropLast(1)
+//                if (streamText.contains(".")) {
+//                    val segments =
+//                        streamText.split(".")
+//                    val completeSegments =
+//                        segments.dropLast(1)
+//
+//                    completeSegments.forEach {text->
+//                        val htmlString =
+//                            markDownToHtml(text)
+//
+//                        log.info { """!!!!
+//                            $htmlString
+//                        """.trimMargin() }
+//
+//                        emitter.send(SseEmitter.event()
+//                            .name("ai-response")
+//                            .id(uniqueId.toString())
+//                            .data(htmlString))
+//                    }
+//                    streamText = segments.last()
+//                }
 
-                    completeSegments.forEach {text->
-                        val htmlString =
-                            markDownToHtml(text)
+                val htmlString =
+                    markDownToHtml(streamText)
 
-                        log.info { """!!!!
-                            $htmlString                  
-                        """.trimMargin() }
+                val text = """<div id="ai-response-div" hx-swap-oob="outerHTML:#ai-response-div">$htmlString</div>"""
 
-                        emitter.send(SseEmitter.event()
-                            .name("ai-response")
-                            .id(uniqueId.toString())
-                            .data(htmlString))
-                    }
-                    streamText = segments.last()
-                }
-            }
-            .doOnComplete {
+                println(text)
 
-                val finalHtml = markDownToHtml(streamText)
                 emitter.send(SseEmitter.event()
                     .name("ai-response")
                     .id(uniqueId.toString())
-                    .data(finalHtml))
+                    .data(text))
+
+            }
+            .doOnComplete {
+
+                //"""<div id="sse-listener" hx-swap-oob="true"></div>"""
+
+//                val finalHtml = markDownToHtml(streamText)
+//                emitter.send(SseEmitter.event()
+//                    .name("ai-response")
+//                    .id(uniqueId.toString())
+//                    .data(finalHtml))
 
             }
             .subscribe()
