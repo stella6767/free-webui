@@ -38,6 +38,9 @@ private fun HTML.defaultHeader() {
             src = "/js/htmx.min.js"
         }
         script {
+            src = "/js/sse.js"
+        }
+        script {
             src = "/js/tailwind.min.js"
         }
         script {
@@ -48,7 +51,6 @@ private fun HTML.defaultHeader() {
             rel = "stylesheet"
             href = "/css/flowbite.min.css"
         }
-
 
         meta {
             httpEquiv = "Content-Type"

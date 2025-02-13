@@ -1,6 +1,7 @@
 package freeapp.life.freeaiweb.view
 
 import freeapp.life.freeaiweb.util.g
+import freeapp.life.freeaiweb.util.markDown
 import freeapp.life.freeaiweb.util.path
 import kotlinx.html.*
 
@@ -12,12 +13,48 @@ fun BODY.indexView() {
     div {
         mainContentView()
     }
+    script {
+        src = "/js/chat.js"
+    }
 }
+
+
+fun DIV.markDownViewer(value: String, isCenter: Boolean = true) {
+
+    div {
+        classes = setOf("toastui-editor-contents text-neutral-content")
+        if (isCenter){
+            classes += "text-center"
+        }
+        attributes["style"] = "overflow-wrap: break-word;"
+
+        markDown {
+            attributes["data-nodeid"] = "1"
+            unsafe {
+                raw(
+                    value
+                )
+            }
+        }
+    }
+
+}
+
+
+fun DIV.chatMsgView(
+    msg: String,
+    uniqueId: Long,
+) {
+
+    div("flex justify-end") {
+        div("bg-[#414158] p-3 rounded-lg max-w-md text-white") { +msg }
+    }
+}
+
 
 fun DIV.mainContentView() {
     classes = setOf("flex", "transition-all", "duration-300")
     drawerView()
-
     main("flex flex-col flex-1 h-[90vh] xl:px-48 py-6 transition-all duration-300") {
         id = "content"
         section {
@@ -27,8 +64,6 @@ fun DIV.mainContentView() {
             chatFormView()
         }
     }
-
-
 }
 
 
@@ -39,9 +74,9 @@ fun SECTION.chatAreaView() {
     div("flex") {
         div("bg-gray-600 p-3 rounded-lg max-w-md text-white") { +"""안녕하세요. 무엇을 도와드릴까요?""" }
     }
-    div("flex justify-end") {
-        div("bg-blue-600 p-3 rounded-lg max-w-md text-white") { +"""지금 상태를 보여주세요.""" }
-    }
+
+
+
 }
 
 fun HEADER.headerView() {
@@ -158,8 +193,21 @@ fun DIV.chatFormView() {
     form {
         id = "chatForm"
         classes = setOf("flex")
+        attributes["hx-post"] = "/chat"
+        attributes["hx-target"] = "#chatArea"
+        attributes["hx-swap"] = "beforeend"
+        attributes["hx-trigger"] = "keydown[!shiftKey && key=='Enter'] from:#chat-input, click from:#chat-input-btn"
+        attributes["hx-on"] = "htmx:afterRequest: document.getElementById('chat-input').value = ''"
+
+        input {
+            type = InputType.hidden
+            id = "client-id"
+            name = "clientId"
+        }
+
         textArea {
             id = "chatInput"
+            name = "msg"
             attributes["placeholder"] = "메시지를 입력하세요..."
             attributes["autocomplete"] = "off"
             classes = setOf(
@@ -178,6 +226,7 @@ fun DIV.chatFormView() {
             attributes["rows"] = "3"
         }
         button {
+            id = "chat-input-btn"
             type = ButtonType.submit
             classes = setOf(
                 "px-4",
