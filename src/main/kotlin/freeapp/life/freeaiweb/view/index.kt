@@ -19,24 +19,13 @@ fun BODY.indexView() {
 }
 
 
-fun DIV.markDownViewer(value: String, isCenter: Boolean = true) {
+fun DIV.aiResponseView() {
 
     div {
-        classes = setOf("toastui-editor-contents text-neutral-content")
-        if (isCenter){
-            classes += "text-center"
-        }
-        attributes["style"] = "overflow-wrap: break-word;"
-
-        markDown {
-            attributes["data-nodeid"] = "1"
-            unsafe {
-                raw(
-                    value
-                )
-            }
-        }
+        id = "ai-response"
     }
+
+
 
 }
 

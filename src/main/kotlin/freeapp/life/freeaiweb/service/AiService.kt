@@ -41,9 +41,9 @@ class AiService(
             .doOnNext {chunk ->
                 streamText += chunk
 
-                if (streamText.contains("```")) {
+                if (streamText.contains(".")) {
                     val segments =
-                        streamText.split("```")
+                        streamText.split(".")
                     val completeSegments =
                         segments.dropLast(1)
 
@@ -63,7 +63,15 @@ class AiService(
                     streamText = segments.last()
                 }
             }
-            .doOnComplete {  }
+            .doOnComplete {
+
+                val finalHtml = markDownToHtml(streamText)
+                emitter.send(SseEmitter.event()
+                    .name("ai-response")
+                    .id(uniqueId.toString())
+                    .data(finalHtml))
+
+            }
             .subscribe()
     }
 
