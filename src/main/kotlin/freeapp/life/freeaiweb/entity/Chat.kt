@@ -1,5 +1,10 @@
 package freeapp.life.freeaiweb.entity
 
+import com.fasterxml.jackson.annotation.JsonBackReference
+import jakarta.persistence.*
+
+
+@Entity
 class Chat(
     id: Long,
     model: String,
@@ -7,18 +12,26 @@ class Chat(
     host:String,
     temperature:Double,
     topP: Double,
-    topK: Int,
-) {
+    topK: Double,
+) : BaseEntity(id = id) {
 
-    var id = id
+    @Column(nullable = false, length = 300)
+    val name = name
 
-    var name = name
-    var model = model
-    var host = host
-    var temperature = temperature
-    var topP = topP
-    var topK = topK
+    @Column(nullable = false, length = 300)
+    val model = model
 
-    var messages: MutableList<Message> = mutableListOf()
+    @Column(nullable = false, length = 300)
+    val host = host
+
+    val temperature = temperature
+
+    val topP = topP
+
+    val topK = topK
+
+    @JsonBackReference
+    @OneToMany(mappedBy = "chat", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    val messages: MutableList<Message> = mutableListOf()
 
 }

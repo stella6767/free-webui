@@ -32,7 +32,6 @@ dependencies {
 
     implementation("com.vladsch.flexmark:flexmark-html2md-converter:0.64.8")
 
-    implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0")
     implementation("io.github.microutils:kotlin-logging:3.0.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")
 

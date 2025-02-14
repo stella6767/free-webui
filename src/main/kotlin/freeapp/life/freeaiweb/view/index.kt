@@ -18,12 +18,6 @@ fun BODY.indexView() {
     }
 }
 
-
-
-
-
-
-
 fun DIV.chatMsgView(
     msg: String,
     uniqueId: Long,
@@ -35,6 +29,7 @@ fun DIV.chatMsgView(
 
     div {
         id = "ai-response-div"
+        classes = setOf("mt-1")
     }
 
 }

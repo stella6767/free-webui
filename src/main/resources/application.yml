@@ -10,7 +10,7 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     properties:
@@ -20,6 +20,7 @@ spring:
         format_sql: true
         use_sql_comments: true
         show_sql: true
+
   devtools:
     livereload:
       enabled: true
@@ -33,7 +34,7 @@ spring:
 
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:db;MODE=MYSQL
+    url: jdbc:h2:~/spring-ai-chat-db;MODE=MYSQL
     username: sa
     password:
     hikari:

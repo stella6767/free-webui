@@ -3,16 +3,17 @@ package freeapp.life.freeaiweb.service
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.AiChatReqDto
+import freeapp.life.freeaiweb.repo.ChatRepository
 import mu.KotlinLogging
 import org.springframework.ai.chat.client.ChatClient
 import org.springframework.stereotype.Service
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.time.Duration
 import java.util.concurrent.ConcurrentHashMap
 
 
 @Service
 class AiService(
+    private val chatRepository: ChatRepository,
     private val builder: ChatClient.Builder,
 ) {
 
@@ -22,6 +23,18 @@ class AiService(
     private val emitters = ConcurrentHashMap<String, SseEmitter>()
     private val parser: Parser = Parser.builder().build()
     private val renderer: HtmlRenderer = HtmlRenderer.builder().build()
+
+
+    fun findChats(){
+
+        val chats =
+            chatRepository.findAll()
+
+        if (chats.isEmpty()){
+
+        }
+
+    }
 
 
     fun sendAiResponse(chatReqDto: AiChatReqDto, uniqueId: Long) {
@@ -35,53 +48,32 @@ class AiService(
             .stream()
             .content()
 
-        var streamText = ""
+        var accumulated = ""
 
         aiResponse
             //.delayElements(Duration.ofMillis(500))
             .doOnNext {chunk ->
-                streamText += chunk
 
-//                if (streamText.contains(".")) {
-//                    val segments =
-//                        streamText.split(".")
-//                    val completeSegments =
-//                        segments.dropLast(1)
-//
-//                    completeSegments.forEach {text->
-//                        val htmlString =
-//                            markDownToHtml(text)
-//
-//                        log.info { """!!!!
-//                            $htmlString
-//                        """.trimMargin() }
-//
-//                        emitter.send(SseEmitter.event()
-//                            .name("ai-response")
-//                            .id(uniqueId.toString())
-//                            .data(htmlString))
-//                    }
-//                    streamText = segments.last()
-//                }
+                accumulated += chunk
 
                 val htmlString =
-                    markDownToHtml(streamText)
+                    markDownToHtml(accumulated)
 
-                val text = """<div id="ai-response-div" hx-swap-oob="outerHTML:#ai-response-div">$htmlString</div>"""
-
-                println(text)
+                val html = """<div id="ai-response-div" class= "my-1 p-1" hx-swap-oob="outerHTML:#ai-response-div">$htmlString</div>"""
 
                 emitter.send(SseEmitter.event()
                     .name("ai-response")
                     .id(uniqueId.toString())
-                    .data(text))
-
+                    .data(html))
             }
             .doOnComplete {
 
                 //"""<div id="sse-listener" hx-swap-oob="true"></div>"""
 
-//                val finalHtml = markDownToHtml(streamText)
+                val finalHtml = markDownToHtml(accumulated)
+
+                println(finalHtml)
+
 //                emitter.send(SseEmitter.event()
 //                    .name("ai-response")
 //                    .id(uniqueId.toString())
