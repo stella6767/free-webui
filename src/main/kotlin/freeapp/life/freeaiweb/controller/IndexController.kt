@@ -2,11 +2,15 @@ package freeapp.life.freeaiweb.controller
 
 import freeapp.life.freeaiweb.dto.AiMessageReqDto
 import freeapp.life.freeaiweb.service.AiService
+import freeapp.life.freeaiweb.service.ChatService
+import freeapp.life.freeaiweb.view.component.chatsNavView
 import freeapp.life.freeaiweb.view.msgPairBlockView
-import freeapp.life.freeaiweb.view.indexView
+import freeapp.life.freeaiweb.view.gptView
 import freeapp.life.freeaiweb.view.renderComponent
 import freeapp.life.freeaiweb.view.renderPageWithLayout
 import mu.KotlinLogging
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -18,6 +22,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 @RestController
 class IndexController(
     private val aiService: AiService,
+    private val chatService: ChatService,
 ) {
 
     private val log = KotlinLogging.logger {  }
@@ -26,7 +31,7 @@ class IndexController(
     @GetMapping("/test")
     fun test(): String {
         return renderPageWithLayout {
-            indexView()
+            gptView()
         }
     }
 
@@ -48,6 +53,37 @@ class IndexController(
 //
 //        return userChatView
 //    }
+
+
+
+    @GetMapping("/chats")
+    fun chats(
+        @PageableDefault(size = 16) pageable: Pageable,
+    ): String {
+
+        return renderComponent {
+            chatsNavView(chatService.findChatsByPage(pageable))
+        }
+    }
+
+
+    @GetMapping("/chat/{id}")
+    fun chat(
+        @PathVariable id: Long,
+    ): String {
+
+        val chat =
+            chatService.findChatById(id)
+        chat.messagePairs
+
+//        return renderComponent {
+//            chatsNavView(chatService.findChatsByPage(pageable))
+//        }
+
+        TODO()
+    }
+
+
 
 
     @PostMapping("/chat")

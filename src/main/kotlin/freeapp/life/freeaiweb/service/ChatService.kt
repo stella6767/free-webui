@@ -1,11 +1,15 @@
 package freeapp.life.freeaiweb.service
 
 import freeapp.life.freeaiweb.dto.ChatReqDto
+import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.entity.Chat
 import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
 import freeapp.life.freeaiweb.repo.ChatRepository
 import jakarta.persistence.EntityNotFoundException
+import org.jsoup.Jsoup
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -50,16 +54,13 @@ class ChatService(
     }
 
 
-    fun findChats() {
-
-        val chats =
-            chatRepository.findAll()
-
-        if (chats.isEmpty()) {
-
+    @Transactional(readOnly = true)
+    fun findChatsByPage(pageable: Pageable): Page<ChatRespDto> {
+        return chatRepository.findChatsByPage(pageable).map {
+            ChatRespDto.fromEntity(it)
         }
-
     }
+
 
 
 }

@@ -51,7 +51,7 @@ class AiService(
             )
         )
 
-        sendAiResponse(messagePair.id, messageReqDto, chat)
+        sendAiResponse(messagePair.id, messageReqDto)
 
         return messagePair
     }
@@ -60,7 +60,6 @@ class AiService(
     private fun sendAiResponse(
         uniqueId: Long,
         messageReqDto: AiMessageReqDto,
-        newChat: Chat
     ) {
 
         // 사용자별 emiiter 가져오기 없으면 만들어내기

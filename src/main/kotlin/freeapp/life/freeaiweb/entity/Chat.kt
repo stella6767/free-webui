@@ -2,6 +2,7 @@ package freeapp.life.freeaiweb.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 
 @Entity
@@ -33,5 +34,8 @@ class Chat(
     @JsonBackReference
     @OneToMany(mappedBy = "chat", cascade = [CascadeType.REMOVE], fetch = FetchType.LAZY, orphanRemoval = true)
     val messagePairs: MutableList<MessagePair> = mutableListOf()
+    var deletedAt: LocalDateTime? = null
+        protected set
+
 
 }

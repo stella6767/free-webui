@@ -45,21 +45,18 @@ inline fun <reified T : Any> EntityManager.getResult(
 
 
 
-inline fun EntityManager.getCountByQuery(
-    countQuery: SelectQuery<*>,
-    ctx: JpqlRenderContext,
-    renderer: JpqlRenderer
+inline fun <T : Any> EntityManager.getCountByQuery(
+    render: JpqlRendered,
+    type: Class<T>,
 ): Long {
 
-    val countQueryRenderer = renderer.render(query = countQuery, ctx)
-
-    val count = this.createQuery(countQueryRenderer.query, Long::class.java).apply {
-        countQueryRenderer.params.forEach { name, value ->
+    val fetch = this.createQuery(render.query, type).apply {
+        render.params.forEach { name, value ->
             setParameter(name, value)
         }
-    }.resultList.size
+    }
 
-    return count.toLong()
+    return fetch.resultList.size.toLong()
 }
 
 

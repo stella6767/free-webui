@@ -1,12 +1,13 @@
 package freeapp.life.freeaiweb.view
 
-import freeapp.life.freeaiweb.util.g
 import freeapp.life.freeaiweb.util.path
+import freeapp.life.freeaiweb.view.component.chatFormView
+import freeapp.life.freeaiweb.view.component.drawerView
 import kotlinx.html.*
 import java.util.UUID
 
 
-fun BODY.indexView() {
+fun BODY.gptView() {
     header {
         headerView()
     }
@@ -17,6 +18,41 @@ fun BODY.indexView() {
         src = "/js/chat.js"
     }
 }
+
+
+
+fun DIV.newChatView(){
+
+    div("bg-gray-900 h-[80vh] flex items-center justify-center") {
+        div("text-center") {
+            h1("text-2xl font-semibold text-white mb-6") { +"""What can I help with?""" }
+            div("flex items-stretch justify-center") {
+                textArea(classes = "bg-gray-700 w-96 p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500") {
+                    placeholder = "Message AI"
+                }
+                button(classes = "px-4 py-2 bg-gray-700 rounded-r-md hover:bg-gray-500 text-white font-bold flex items-center justify-center") {
+                    type = ButtonType.submit
+                    svg("w-6 h-6") {
+                        attributes["aria-hidden"] = "true"
+                        attributes["xmlns"] = "http://www.w3.org/2000/svg"
+                        attributes["fill"] = "none"
+                        attributes["viewbox"] = "0 0 10 14"
+                        path {
+                            attributes["stroke"] = "currentColor"
+                            attributes["stroke-linecap"] = "round"
+                            attributes["stroke-linejoin"] = "round"
+                            attributes["stroke-width"] = "2"
+                            attributes["d"] = "M5 13V1m0 0L1 5m4-4 4 4"
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+
 
 fun DIV.msgPairBlockView(
     msg: String,
@@ -43,7 +79,6 @@ fun DIV.mainContentView() {
         section {
             chatAreaView()
         }
-
         div {
             chatFormView()
         }
@@ -54,7 +89,7 @@ fun DIV.mainContentView() {
 fun SECTION.chatAreaView() {
     id = "chatArea"
     classes = setOf("flex-1", "p-4", "overflow-y-auto", "space-y-4")
-
+    attributes["hx-on"] = "htmx::afterSwap: this.scrollTop = this.scrollHeight"
     div {
         sseConnectView()
     }
@@ -84,7 +119,7 @@ fun DIV.sseConnectView(
     }
 }
 
-private fun DIV.chatIdHiddenView(
+fun DIV.chatIdHiddenView(
     chatId:String = "0"
 ) {
     input {
@@ -101,7 +136,24 @@ fun HEADER.headerView() {
 
     id = "header"
     classes = setOf("bg-gray-800", "py-4", "px-8", "flex", "items-center", "transition-all", "duration-300")
+    drawerToggleBtnView()
+    h1 {
+        classes = setOf("text-2xl", "font-bold", "text-white", "ml-3")
+        +"Kotlin GPT"
+    }
+
+}
+
+
+
+private fun HEADER.drawerToggleBtnView() {
     div {
+        attributes["hx-on:click"] = """
+            htmx.toggleClass('#drawer', '-translate-x-full');
+            htmx.toggleClass('#header', 'ml-64');                    
+            htmx.toggleClass('#content', 'ml-64')                    
+        """.trimIndent()
+
         classes = setOf(
             "hover:bg-[#b4b4b4]",
             "w-10",
@@ -125,147 +177,11 @@ fun HEADER.headerView() {
             }
         }
     }
-    h1 {
-        classes = setOf("text-2xl", "font-bold", "text-white", "ml-3")
-        +"ChatGPT-like UI"
-    }
-
 }
 
 
-fun DIV.drawerView() {
-    aside {
-        id = "drawer"
-        classes = setOf(
-            "fixed",
-            "top-0",
-            "left-0",
-            "h-full",
-            "w-64",
-            "bg-gray-800",
-            "p-4",
-            "transform",
-            "-translate-x-full",
-            "transition-transform",
-            "duration-300",
-            "z-10"
-        )
-        svg {
-            attributes["xmlns"] = "http://www.w3.org/2000/svg"
-            attributes["fill"] = "none"
-            attributes["stroke"] = "currentColor"
-            attributes["viewbox"] = "0 0 24 24"
-            classes = setOf("w-9", "h-9", "humbleicons", "mb-3", "hi-folder-add")
-            g {
-                attributes["xmlns"] = "http://www.w3.org/2000/svg"
-                attributes["stroke"] = "currentColor"
-                attributes["stroke-width"] = "2"
-                path {
-                    attributes["stroke-linejoin"] = "round"
-                    attributes["d"] =
-                        "M3 18V6a2 2 0 012-2h4.539a2 2 0 011.562.75L12.2 6.126a1 1 0 00.78.375H20a1 1 0 011 1V18a1 1 0 01-1 1H4a1 1 0 01-1-1z"
-                }
-                path {
-                    attributes["stroke-linecap"] = "round"
-                    attributes["d"] = "M9.5 12.5h5M12 15v-5"
-                }
-            }
-        }
-        nav {
-            ul {
-                classes = setOf("space-y-2")
-                li {
-                    a {
-                        href = "#"
-                        classes = setOf("text-gray-300", "hover:text-white")
-                        +"대시보드"
-                    }
-                }
-                li {
-                    a {
-                        href = "#"
-                        classes = setOf("text-gray-300", "hover:text-white")
-                        +"모델 관리"
-                    }
-                }
-                li {
-                    a {
-                        href = "#"
-                        classes = setOf("text-gray-300", "hover:text-white")
-                        +"설정"
-                    }
-                }
-            }
-        }
-    }
-
-}
 
 
-fun DIV.chatFormView() {
-    classes = setOf("border-t", "border-gray-700", "p-4")
-    chatIdHiddenView()
-    form {
-        id = "chatForm"
-        classes = setOf("flex")
-        attributes["hx-post"] = "/chat"
-        attributes["hx-include"] = "#client-id, #chat-id-box"
-        attributes["hx-target"] = "#chatArea"
-        attributes["hx-swap"] = "beforeend"
-        attributes["hx-trigger"] = "keydown[!shiftKey && key=='Enter'] from:#chatInput, click from:#chat-input-btn"
-        attributes["hx-on--after-request"] = "javascript:document.getElementById('chatInput').value = ''"
 
-        textArea {
-            id = "chatInput"
-            name = "msg"
-            attributes["placeholder"] = "메시지를 입력하세요..."
-            attributes["autocomplete"] = "off"
-            classes = setOf(
-                "flex-1",
-                "px-4",
-                "py-2",
-                "rounded-l-md",
-                "bg-gray-700",
-                "border",
-                "border-gray-600",
-                "focus:outline-none",
-                "focus:ring-2",
-                "focus:ring-blue-500",
-                "text-white"
-            )
-            attributes["rows"] = "3"
-        }
-        button {
-            id = "chat-input-btn"
-            type = ButtonType.submit
-            classes = setOf(
-                "px-4",
-                "py-2",
-                "bg-gray-700",
-                "rounded-r-md",
-                "hover:bg-blue-700",
-                "text-white",
-                "font-bold",
-                "flex",
-                "items-center",
-                "justify-center"
-            )
-            svg {
-                classes = setOf("w-6", "h-6")
-                attributes["aria-hidden"] = "true"
-                attributes["xmlns"] = "http://www.w3.org/2000/svg"
-                attributes["fill"] = "none"
-                attributes["viewbox"] = "0 0 10 14"
-                path {
-                    attributes["stroke"] = "currentColor"
-                    attributes["stroke-linecap"] = "round"
-                    attributes["stroke-linejoin"] = "round"
-                    attributes["stroke-width"] = "2"
-                    attributes["d"] = "M5 13V1m0 0L1 5m4-4 4 4"
-                }
-            }
-        }
-    }
 
-}
 
