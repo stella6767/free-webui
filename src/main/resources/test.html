@@ -1,36 +1,78 @@
 <!DOCTYPE html>
-<html>
-<html>
+<html lang="ko">
 <head>
-    <META http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <script src="/js/htmx.min.js"></script><script src="/js/tailwind.min.js"></script><script defer src="/js/flowbite.min.js"></script>
-    <link href="/css/flowbite.min.css" rel="stylesheet">
-    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
-    <meta charset="UTF-8">
-    <meta content="stella6767" name="author">
-    <meta content="Kotlin,htmx" name="keywords">
-    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ChatGPT UI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
 </head>
 <body xmlns:hx-on="http://www.w3.org/1999/xhtml" class="bg-gray-900 text-gray-200 font-sans" id="content-body">
-<div>
-    <div class="toastui-editor-contents text-neutral-content text-center" style="overflow-wrap: break-word;">
-        <md-block data-nodeid="1"># Heading
-
-            Text **bold text** *italic text* ~strike~
-
-            ```js
-            test.foo();
-            ```
-
-            ```html
-            &lt;foo&gt;
-            ```
-
-            * List item 1
-            * List item 2               	</md-block>
+<header class="bg-gray-800 py-4 px-8 flex items-center transition-all duration-300" id="header">
+    <div class="hover:bg-[#b4b4b4] w-10 h-10 flex items-center justify-center rounded cursor-pointer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-6 h-6 text-gray-800 dark:text-white" fill="currentColor" id="toggleDrawer" viewBox="0 0 17 14">
+            <path d="M16 2H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 0 1 0 2Z"></path>
+        </svg>
     </div>
+    <h1 class="text-2xl font-bold text-white ml-3">ChatGPT-like UI</h1>
+</header>
+<div class="flex transition-all duration-300">
+    <aside class="fixed top-0 left-0 h-full w-64 bg-gray-800 p-4 transform -translate-x-full transition-transform duration-300 z-10" id="drawer">
+        <svg class="w-9 h-9 humbleicons mb-3 hi-folder-add" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <g stroke="currentColor" stroke-width="2">
+                <path d="M3 18V6a2 2 0 012-2h4.539a2 2 0 011.562.75L12.2 6.126a1 1 0 00.78.375H20a1 1 0 011 1V18a1 1 0 01-1 1H4a1 1 0 01-1-1z" stroke-linejoin="round"></path>
+                <path d="M9.5 12.5h5M12 15v-5" stroke-linecap="round"></path>
+            </g>
+        </svg>
+        <nav>
+            <ul class="space-y-2">
+                <li>
+                    <a class="text-gray-300 hover:text-white" href="#">대시보드</a>
+                </li>
+                <li>
+                    <a class="text-gray-300 hover:text-white" href="#">모델 관리</a>
+                </li>
+                <li>
+                    <a class="text-gray-300 hover:text-white" href="#">설정</a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+    <main class="flex flex-col flex-1 h-[90vh] xl:px-48 py-6 transition-all duration-300" id="content">
+        <section class="flex-1 p-4 overflow-y-auto space-y-4" id="chatArea">
+
+            <div>
+                <input id="client-id" name="clientId" type="hidden" value="7004bc44-4b60-4504-b3d3-8b9b04a5ccd5">
+                <div hx-ext="sse" hx-target="#ai-response-div" id="sse-listener" sse-connect="/chat-sse/7004bc44-4b60-4504-b3d3-8b9b04a5ccd5" sse-swap="ai-response"></div>
+            </div>
+            <div>
+                <div>
+                    <div class="flex justify-end">
+                        <div class="bg-[#414158] p-3 rounded-lg max-w-md text-white">hi</div>
+                    </div>
+                    <div id="ai-response-div" class="my-1 p-1"><p>Hello! How can I assist you today?</p>
+                    </div>
+                </div>
+            </div>
+
+
+        </section>
+        <div class="border-t border-gray-700 p-4">
+            <form class="flex" hx-include="#client-id" hx-on--after-request="javascript:document.getElementById('chatInput').value = ''" hx-post="/chat" hx-swap="beforeend" hx-target="#chatArea" hx-trigger="keydown[!shiftKey &amp;&amp; key=='Enter'] from:#chatInput, click from:#chat-input-btn" id="chatForm">
+                <textarea autocomplete="off" class="flex-1 px-4 py-2 rounded-l-md bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white" id="chatInput" name="msg" placeholder="메시지를 입력하세요..." rows="3"></textarea><button class="px-4 py-2 bg-gray-700 rounded-r-md hover:bg-blue-700 text-white font-bold flex items-center justify-center" id="chat-input-btn" type="submit">
+                <svg aria-hidden="true" class="w-6 h-6" fill="none" viewBox="0 0 10 14">
+                    <path d="M5 13V1m0 0L1 5m4-4 4 4" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+                </svg>
+            </button>
+            </form>
+        </div>
+    </main>
 </div>
+<script src="/js/chat.js"></script>
+
+
+
 </body>
 </html>
-</html>
-

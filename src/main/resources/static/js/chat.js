@@ -1,5 +1,5 @@
 
-htmx.logAll();
+//htmx.logAll();
 
 
 // const clientId = generateUUID(); // 고유 UUID 생성

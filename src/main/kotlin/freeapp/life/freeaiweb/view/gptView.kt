@@ -18,32 +18,21 @@ fun BODY.indexView() {
     }
 }
 
-fun DIV.chatMsgView(
+fun DIV.msgPairBlockView(
     msg: String,
-    uniqueId: Long,
+    uniqueId: String,
+    chatId:String,
 ) {
-
+    id = "msg-pair-${uniqueId}"
     div("flex justify-end") {
         div("bg-[#414158] p-3 rounded-lg max-w-md text-white") { +msg }
     }
-
     div {
-        id = "ai-response-div"
-        classes = setOf("mt-1")
+        id = "ai-response-div-${uniqueId}"
+        classes = setOf("my-1", "p-1")
     }
-
+    chatIdHiddenView(chatId)
 }
-
-fun DIV.aiResponseView() {
-
-    div {
-        id = "ai-response"
-    }
-}
-
-
-
-
 
 
 fun DIV.mainContentView() {
@@ -66,9 +55,6 @@ fun SECTION.chatAreaView() {
     id = "chatArea"
     classes = setOf("flex-1", "p-4", "overflow-y-auto", "space-y-4")
 
-    div("flex") {
-        div("bg-gray-600 p-3 rounded-lg max-w-md text-white") { +"""안녕하세요. 무엇을 도와드릴까요?""" }
-    }
     div {
         sseConnectView()
     }
@@ -81,6 +67,7 @@ fun DIV.sseConnectView(
     val connectionId = clientId.ifEmpty {
         UUID.randomUUID().toString()
     }
+
     input {
         type = InputType.hidden
         id = "client-id"
@@ -92,12 +79,20 @@ fun DIV.sseConnectView(
         attributes["hx-ext"] = "sse"
         attributes["sse-connect"] = "/chat-sse/${connectionId}"
         attributes["sse-swap"] = "ai-response"
-        attributes["hx-target"] = "#ai-response-div"
+        // 의미 없지만..
+        //attributes["hx-target"] = "#ai-response-div"
     }
 }
-fun DIV.chatatat(){
-    div {
-        attributes["hx-swap-oob"] = "outerHTML:#message-container"
+
+private fun DIV.chatIdHiddenView(
+    chatId:String = "0"
+) {
+    input {
+        type = InputType.hidden
+        id = "chat-id-box"
+        name = "chatId"
+        value = chatId
+        attributes["hx-swap-oob"] = "true"
     }
 }
 
@@ -106,8 +101,6 @@ fun HEADER.headerView() {
 
     id = "header"
     classes = setOf("bg-gray-800", "py-4", "px-8", "flex", "items-center", "transition-all", "duration-300")
-
-
     div {
         classes = setOf(
             "hover:bg-[#b4b4b4]",
@@ -210,14 +203,13 @@ fun DIV.drawerView() {
 
 
 fun DIV.chatFormView() {
-
     classes = setOf("border-t", "border-gray-700", "p-4")
-
+    chatIdHiddenView()
     form {
         id = "chatForm"
         classes = setOf("flex")
         attributes["hx-post"] = "/chat"
-        attributes["hx-include"] = "#client-id"
+        attributes["hx-include"] = "#client-id, #chat-id-box"
         attributes["hx-target"] = "#chatArea"
         attributes["hx-swap"] = "beforeend"
         attributes["hx-trigger"] = "keydown[!shiftKey && key=='Enter'] from:#chatInput, click from:#chat-input-btn"

@@ -36,9 +36,17 @@ class CustomServletContextRequestLoggingFilter(
         println("request.queryString=>${request.queryString}")
 
         val payload = if (isIncludePayload) {
-            val payloadData = getMessagePayload(request)
-            payloadData ?: ""
-        }else ""
+            val payloadData = getMessagePayload(request) ?: ""
+
+            if (request.contentType?.contains("application/x-www-form-urlencoded") == true) {
+                val formParams = request.parameterMap.entries.joinToString("&") { (key, values) ->
+                    "$key=${values.joinToString(",")}"
+                }
+                "$payloadData Form Parameters: $formParams"
+            } else {
+                payloadData
+            }
+        } else ""
 
         return  """
             

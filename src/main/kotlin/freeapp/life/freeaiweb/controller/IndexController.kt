@@ -1,8 +1,8 @@
 package freeapp.life.freeaiweb.controller
 
-import freeapp.life.freeaiweb.dto.AiChatReqDto
+import freeapp.life.freeaiweb.dto.AiMessageReqDto
 import freeapp.life.freeaiweb.service.AiService
-import freeapp.life.freeaiweb.view.chatMsgView
+import freeapp.life.freeaiweb.view.msgPairBlockView
 import freeapp.life.freeaiweb.view.indexView
 import freeapp.life.freeaiweb.view.renderComponent
 import freeapp.life.freeaiweb.view.renderPageWithLayout
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.util.concurrent.atomic.AtomicLong
 
 
 @RestController
@@ -23,7 +22,6 @@ class IndexController(
 
     private val log = KotlinLogging.logger {  }
 
-    private val aiResponseDivId = AtomicLong()
 
     @GetMapping("/test")
     fun test(): String {
@@ -33,21 +31,38 @@ class IndexController(
     }
 
 
+//    @PostMapping("/chat")
+//    fun newChat(chatReqDto: AiMessageReqDto): String {
+//
+//        val uniqueId =
+//            aiResponseDivId.incrementAndGet()
+//
+//        aiService.sendAiResponse(chatReqDto, uniqueId)
+//
+//        val userChatView = renderComponent {
+//            chatMsgView(
+//                chatReqDto.msg,
+//                uniqueId
+//            )
+//        }
+//
+//        return userChatView
+//    }
+
+
     @PostMapping("/chat")
-    fun chat(chatReqDto: AiChatReqDto): String {
+    fun chat(chatReqDto: AiMessageReqDto): String {
 
-        val uniqueId =
-            aiResponseDivId.incrementAndGet()
-
-        aiService.sendAiResponse(chatReqDto, uniqueId)
+        val msgPair =
+            aiService.createMessagePair(chatReqDto)
 
         val userChatView = renderComponent {
-            chatMsgView(
+            msgPairBlockView(
                 chatReqDto.msg,
-                uniqueId
+                msgPair.id.toString(),
+                msgPair.chat.id.toString()
             )
         }
-
         return userChatView
     }
 
