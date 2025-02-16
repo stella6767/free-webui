@@ -16,10 +16,11 @@ class CustomServletContextRequestLoggingFilter(
         maxPayloadLength = 1000
     }
 
-//    override fun shouldLog(request: HttpServletRequest): Boolean {
-//        val userAgent = request.getHeader("User-Agent")
-//        return !(userAgent.contains("ELB-HealthChecker") || userAgent.contains("Prometheus"))
-//    }
+    override fun shouldLog(request: HttpServletRequest): Boolean {
+        //val userAgent = request.getHeader("User-Agent")
+        val requestURI = request.requestURI
+        return !(requestURI.contains(".js") || requestURI.contains(".css"))
+    }
 
 
     override fun createMessage(request: HttpServletRequest, prefix: String, suffix: String): String {

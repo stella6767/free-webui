@@ -17,10 +17,8 @@ fun renderPageWithLayout(bodyContent: BODY.() -> Unit): String {
     }
 }
 
-fun renderComponent(div: DIV.() -> Unit): String {
-    return createHTML().div {
-        div()
-    }
+fun renderComponent(block: TagConsumer<String>.() -> Unit): String {
+    return createHTML().apply(block).finalize()
 }
 
 inline fun writePage(crossinline block: HTML.() -> Unit): String {

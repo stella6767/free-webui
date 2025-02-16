@@ -46,10 +46,14 @@ data class ChatRespDto(
             isNeedMsg:Boolean,
         ): ChatRespDto {
 
+            // 필요한 경우 lazy 로딩된 컬렉션을 명시적으로 초기화하여 MutableList로 변환
+            val messagePairs =
+                if (isNeedMsg) chat.messagePairs.toMutableList() else mutableListOf()
+
             return ChatRespDto(
                 id = chat.id,
                 name = chat.name,
-                messagePairs = if (isNeedMsg) chat.messagePairs else mutableListOf(),
+                messagePairs = messagePairs,
                 createdAt = chat.createdAt
             )
         }

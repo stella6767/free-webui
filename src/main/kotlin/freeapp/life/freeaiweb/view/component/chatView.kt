@@ -46,7 +46,11 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>) {
                         id = "chat-li-${chat.id}"
                         attributes["hx-trigger"] = "click"
                         attributes["hx-get"] = "/chat/${chat.id}"
+                        attributes["hx-target"] = "#main-container"
+                        attributes["hx-push-url"] = "true"
 
+                        //attributes["hx-swap"] = "outerHTML"
+                        //attributes["onclick"] = "window.location.href='/chat/${chat.id}'"
                         span("text-gray-300 hover:text-white") { +chat.name }
                         div("absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200") {
                             svg("icon-md") {
@@ -113,7 +117,7 @@ fun DIV.chatFormView() {
     form {
         id = "chatForm"
         classes = setOf("flex")
-        attributes["hx-post"] = "/chat"
+        attributes["hx-post"] = "/message"
         attributes["hx-include"] = "#client-id, #chat-id-box"
         attributes["hx-target"] = "#chatArea"
         attributes["hx-swap"] = "beforeend"
@@ -126,6 +130,7 @@ fun DIV.chatFormView() {
             attributes["placeholder"] = "메시지를 입력하세요..."
             attributes["autocomplete"] = "off"
             attributes["rows"] = "3"
+            required = true
             classes = setOf(
                 "flex-1",
                 "px-4",
@@ -184,7 +189,9 @@ fun HEADER.headerView() {
         classes = setOf("text-2xl", "font-bold", "text-white", "ml-3")
         +"Kotlin GPT"
     }
-
+    div {
+        drawerView()
+    }
 }
 
 
@@ -194,7 +201,7 @@ fun HEADER.drawerToggleBtnView() {
         attributes["hx-on:click"] = """
             htmx.toggleClass('#drawer', '-translate-x-full');
             htmx.toggleClass('#header', 'ml-64');                    
-            htmx.toggleClass('#content', 'ml-64')                    
+            htmx.toggleClass('#main-container', 'ml-64')                    
         """.trimIndent()
 
         classes = setOf(

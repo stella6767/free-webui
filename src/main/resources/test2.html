@@ -20,11 +20,7 @@
         </svg>
     </div>
     <h1 class="text-2xl font-bold text-white ml-3">ChatGPT-like UI</h1>
-</header>
 
-<!-- 메인 영역: 드로어와 콘텐츠 영역 -->
-<div class="flex transition-all duration-300">
-    <!-- 왼쪽 드로어: 기본적으로 숨김 (-translate-x-full 사용) -->
     <aside id="drawer"
            class="fixed top-0 left-0 h-full w-64 bg-gray-800 p-4 transform -translate-x-full transition-transform duration-300 z-10">
         <div class="flex items-center cursor-pointer font-sans text-base font-medium h-11 leading-5 pl-2.5 pr-2.5 break-words text-[#f8fafc]">
@@ -71,6 +67,12 @@
             !!
         </div>
     </aside>
+
+</header>
+
+<!-- 메인 영역: 드로어와 콘텐츠 영역 -->
+<div class="flex transition-all duration-300">
+    <!-- 왼쪽 드로어: 기본적으로 숨김 (-translate-x-full 사용) -->
 
     <!-- 메인 콘텐츠 영역 -->
     <main id="content" class="flex flex-col flex-1 h-[90vh] xl:px-48 py-6 transition-all duration-300">

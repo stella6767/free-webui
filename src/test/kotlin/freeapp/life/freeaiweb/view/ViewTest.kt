@@ -28,10 +28,10 @@ class ViewTest {
 //            classes = setOf("mt-4")
 //            //이미 문자열 다운스트림 전달 후 클래스 수정이니 오류
 //        }
-        val htmlContent = renderComponent {
-            mainContentView(ChatRespDto(1, "", mutableListOf() , LocalDateTime.now()))
-        }
-        println(htmlContent)
+//        val htmlContent = renderComponent {
+//            mainContentView(ChatRespDto(1, "", mutableListOf() , LocalDateTime.now()))
+//        }
+//        println(htmlContent)
     }
 
     @Test

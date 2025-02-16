@@ -12,13 +12,21 @@ import kotlinx.html.*
 import java.util.UUID
 
 
+
 fun BODY.chatView(chat: ChatRespDto) {
     header {
         headerView()
     }
     div {
-        mainContentView(chat)
+        id = "main-container"
+        div {
+            mainContentView(chat)
+        }
+        div {
+            sseConnectView()
+        }
     }
+
     script {
         src = "/js/chat.js"
     }
@@ -39,17 +47,18 @@ fun DIV.msgPairBlockView(
     div {
         id = "ai-response-div-${messagePair.id}"
         classes = setOf("my-1", "p-1")
-        +aiMsg
+        unsafe {
+          raw(aiMsg)
+        }
     }
 }
 
 
 fun DIV.mainContentView(chat: ChatRespDto) {
+    id = "content"
     classes = setOf("flex", "transition-all", "duration-300")
-    attributes["hx-push-url"] = "/chat/${chat.id}"
-    drawerView()
+
     main("flex flex-col flex-1 h-[90vh] xl:px-48 py-6 transition-all duration-300") {
-        id = "content"
         section {
             chatAreaView(chat)
         }
@@ -77,7 +86,6 @@ fun SECTION.chatAreaView(
                 pair,
                 chat.id.toString()
             )
-            //todo chatid tag 를 하나만 두도록
         }
     }
 

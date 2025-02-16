@@ -8,9 +8,12 @@ import freeapp.life.freeaiweb.service.ChatService
 import freeapp.life.freeaiweb.view.*
 import freeapp.life.freeaiweb.view.component.chatFormView
 import freeapp.life.freeaiweb.view.component.chatsNavView
+import jakarta.servlet.http.HttpServletRequest
+import kotlinx.html.div
 import mu.KotlinLogging
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
@@ -37,8 +40,8 @@ class IndexController(
         }
     }
 
-    @PostMapping("/new/chat")
-    fun newChat(chatReqDto: AiMessageReqDto): String {
+    @PostMapping("/chat")
+    fun newChat(chatReqDto: AiMessageReqDto): ResponseEntity<String> {
 
         val msgPair =
             aiService.createMessagePair(chatReqDto)
@@ -47,23 +50,28 @@ class IndexController(
             ChatRespDto.fromEntity(msgPair.chat, true)
 
         val renderComponent = renderComponent {
-            mainContentView(chatDto)
+            div {
+                mainContentView(chatDto)
+            }
         }
-
-        return renderComponent
+        val headers = HttpHeaders()
+        headers.add("HX-Push", "/chat/${chatDto.id}")
+        return ResponseEntity(renderComponent, headers, HttpStatus.OK)
     }
 
-    @PostMapping("/chat")
-    fun chat(chatReqDto: AiMessageReqDto): String {
+    @PostMapping("/message")
+    fun message(chatReqDto: AiMessageReqDto): String {
 
         val msgPair =
             aiService.createMessagePair(chatReqDto)
 
         val userChatView = renderComponent {
-            msgPairBlockView(
-                msgPair,
-                msgPair.chat.id.toString()
-            )
+            div {
+                msgPairBlockView(
+                    msgPair,
+                    msgPair.chat.id.toString()
+                )
+            }
         }
         return userChatView
     }
@@ -73,14 +81,17 @@ class IndexController(
     @GetMapping("/chat/{id}")
     fun chat(
         @PathVariable id: Long,
+        request: HttpServletRequest,
     ): String {
 
         val chat =
-            chatService.findChatById(id)
-
-        return renderPageWithLayout {
-            chatView(ChatRespDto.fromEntity(chat, true))
-        }
+            chatService.findChatRespById(id)
+        //attributes["hx-push-url"] = "/chat/${chat.id}"
+        val html = if (request?.getHeader("HX-Request") == null) {
+            renderPageWithLayout { chatView(chat) }
+        } else renderComponent { div { mainContentView(chat) } }
+        
+        return html
     }
 
 
@@ -92,7 +103,9 @@ class IndexController(
     ): String {
 
         return renderComponent {
-            chatsNavView(chatService.findChatsByPage(pageable))
+            div {
+                chatsNavView(chatService.findChatsByPage(pageable))
+            }
         }
     }
 

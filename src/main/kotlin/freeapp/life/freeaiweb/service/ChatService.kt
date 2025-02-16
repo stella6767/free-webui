@@ -19,8 +19,6 @@ class ChatService(
     private val chatRepository: ChatRepository
 ) {
 
-
-
     @Transactional
     fun saveChat(chatReqDto: ChatReqDto): Chat {
         return chatRepository.save(chatReqDto.toEntity())
@@ -47,24 +45,17 @@ class ChatService(
 
     @Transactional(readOnly = true)
     fun findChatById(id: Long): Chat {
-
         val chat =
             chatRepository.findByIdOrNull(id) ?: throw EntityNotFoundException()
-
         return chat
     }
 
 
-//    @Transactional
-//    fun newChat(chatId:Long){
-//
-//        val chat: Chat =
-//            if (chatId != 0L) {
-//                chatRepository.findChatById(chatId)
-//            } else saveChat(messageReqDto.toChatReqDto())
-//
-//
-//    }
+    @Transactional(readOnly = true)
+    fun findChatRespById(chatId:Long): ChatRespDto {
+        val chat = findChatById(chatId)
+        return ChatRespDto.fromEntity(chat, true)
+    }
 
 
     @Transactional(readOnly = true)

@@ -31,8 +31,6 @@ class AiService(
     private val sseConnectionTime = Long.MAX_VALUE
 
 
-    //todo input이 empty면 전송 안 되게..
-
 //    @Transactional
 //    fun newChat(chatReqDto: ChatReqDto) {
 //
