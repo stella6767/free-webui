@@ -27,7 +27,7 @@ spring:
       enabled: true
     restart:
       poll-interval: 5s
-      enabled: true
+      enabled: false
 
   h2:
     console:

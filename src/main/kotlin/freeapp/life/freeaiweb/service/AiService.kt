@@ -5,6 +5,7 @@ import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.AiMessageReqDto
 import freeapp.life.freeaiweb.dto.ChatReqDto
 import freeapp.life.freeaiweb.entity.Chat
+import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
 import mu.KotlinLogging
 import org.springframework.ai.chat.client.ChatClient
@@ -30,13 +31,53 @@ class AiService(
     private val sseConnectionTime = Long.MAX_VALUE
 
 
+    //todo input이 empty면 전송 안 되게..
+
+//    @Transactional
+//    fun newChat(chatReqDto: ChatReqDto) {
+//
+//        val newChat =
+//            chatService.saveChat(chatReqDto)
+//
+//        val humanMessage =
+//            chatService.saveMessage(Message(content = chatReqDto.msg))
+//
+//        val messagePair = chatService.saveMessagePair(
+//            MessagePair(
+//                humanMessage = humanMessage,
+//                aiMessage = null,
+//                chat = newChat
+//            )
+//        )
+//
+//        val aiResponse = chatClient.prompt(humanMessage.content)
+//            .call()
+//            .chatResponse() ?: throw IllegalArgumentException()
+//
+//        val content = aiResponse.result.output.content
+//
+//        println(aiResponse.metadata)
+//        println(aiResponse.result.output.metadata)
+//
+//        val html = markDownToHtml(accumulated)
+//        val aiMessage =
+//            chatService.saveMessage(messageReqDto.toEntity(html))
+//        println("확인!!! ${aiMessage.id}")
+//        chatService.updateMessagePair(uniqueId, aiMessage)
+//
+//        //sendAiResponse(messagePair.id, messageReqDto)
+//
+//
+//    }
+
+
     @Transactional
     fun createMessagePair(messageReqDto: AiMessageReqDto): MessagePair {
 
-        val chat =
+        val chat: Chat =
             if (messageReqDto.chatId != 0L) {
                 chatService.findChatById(messageReqDto.chatId)
-            } else chatService.saveChat(ChatReqDto())
+            } else chatService.saveChat(messageReqDto.toChatReqDto())
 
         val content = messageReqDto.msg
 
@@ -53,7 +94,7 @@ class AiService(
 
         sendAiResponse(messagePair.id, messageReqDto)
 
-        return messagePair
+        return chat.addMessagePair(messagePair)
     }
 
 
@@ -62,10 +103,15 @@ class AiService(
         messageReqDto: AiMessageReqDto,
     ) {
 
+        //todo refactoring
+
         // 사용자별 emiiter 가져오기 없으면 만들어내기
         val emitter = emitters.computeIfAbsent(messageReqDto.clientId) {
+            println("why")
             SseEmitter(sseConnectionTime)
         }
+
+        println("?????")
 
         val aiResponse = chatClient.prompt(messageReqDto.msg)
             .stream()

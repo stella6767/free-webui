@@ -7,7 +7,6 @@ import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
 import freeapp.life.freeaiweb.repo.ChatRepository
 import jakarta.persistence.EntityNotFoundException
-import org.jsoup.Jsoup
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -19,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional
 class ChatService(
     private val chatRepository: ChatRepository
 ) {
+
+
 
     @Transactional
     fun saveChat(chatReqDto: ChatReqDto): Chat {
@@ -54,10 +55,22 @@ class ChatService(
     }
 
 
+//    @Transactional
+//    fun newChat(chatId:Long){
+//
+//        val chat: Chat =
+//            if (chatId != 0L) {
+//                chatRepository.findChatById(chatId)
+//            } else saveChat(messageReqDto.toChatReqDto())
+//
+//
+//    }
+
+
     @Transactional(readOnly = true)
     fun findChatsByPage(pageable: Pageable): Page<ChatRespDto> {
         return chatRepository.findChatsByPage(pageable).map {
-            ChatRespDto.fromEntity(it)
+            ChatRespDto.fromEntity(it, false)
         }
     }
 
