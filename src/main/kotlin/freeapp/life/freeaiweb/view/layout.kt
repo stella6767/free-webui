@@ -39,6 +39,9 @@ private fun HTML.defaultHeader() {
             src = "/js/sse.js"
         }
         script {
+            src = "/js/custom-htmx.js"
+        }
+        script {
             src = "/js/tailwind.min.js"
         }
         script {

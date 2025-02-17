@@ -63,10 +63,25 @@ class IndexController(
         val renderComponent = renderComponent {
             div {
                 mainContentView(chatDto)
+
+                div {
+                    id = "chat-nav-box"
+                    attributes["hx-get"] = "/chats"
+                    attributes["hx-trigger"] = "load, chatsEvent from:body"
+                    attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
+                    attributes["hx-swap-oob"] = "true"
+                    classes = setOf("mt-5")
+                    chatsNavView(
+                        chatService.findChatsByPage(PageRequest.of(0, 16)),
+                        msgPair.chat.id.toString()
+                    )
+                }
             }
         }
         val headers = HttpHeaders()
         headers.add("HX-Push", "/chat/${chatDto.id}")
+        //headers.add("HX-Trigger", "chatsEvent")
+
         return ResponseEntity(renderComponent, headers, HttpStatus.OK)
     }
 

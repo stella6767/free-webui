@@ -28,6 +28,7 @@ fun DIV.newChatView() {
         div("text-center") {
             h1("text-2xl font-semibold text-white mb-6") { +"""What can I help with?""" }
             div("flex items-stretch justify-center") {
+                id = "new-chat-msg-box"
                 attributes["hx-post"] = "/chat"
                 attributes["hx-include"] = "#client-id, #chat-input-area"
                 attributes["hx-target"] = "#main-container"

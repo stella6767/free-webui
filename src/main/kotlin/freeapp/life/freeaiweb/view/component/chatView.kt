@@ -28,7 +28,7 @@ fun DIV.drawerView() {
         div {
             id = "chat-nav-box"
             attributes["hx-get"] = "/chats"
-            attributes["hx-trigger"] = "load"
+            attributes["hx-trigger"] = "load, chatsEvent from:body"
             attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
 
             classes = setOf("mt-5")

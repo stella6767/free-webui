@@ -28,9 +28,7 @@ fun BODY.chatView(chat: ChatRespDto) {
         }
     }
 
-    script {
-        src = "/js/chat.js"
-    }
+
 }
 
 
