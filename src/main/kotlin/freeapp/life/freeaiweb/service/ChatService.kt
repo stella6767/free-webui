@@ -66,5 +66,14 @@ class ChatService(
     }
 
 
+    @Transactional
+    fun updateChat(chatReqDto: ChatReqDto) {
+
+
+
+
+        TODO("Not yet implemented")
+    }
+
 
 }

@@ -16,9 +16,6 @@ fun BODY.chatInitialView() {
         div {
             newChatView()
         }
-        div {
-            sseConnectView()
-        }
     }
 }
 
@@ -32,8 +29,7 @@ fun DIV.newChatView() {
             div("flex items-stretch justify-center") {
                 attributes["hx-post"] = "/chat"
                 attributes["hx-include"] = "#client-id, #chat-input-area"
-                attributes["hx-target"] = "#content"
-                attributes["hx-swap"] = "outerHTML"
+                attributes["hx-target"] = "#main-container"
                 attributes["hx-trigger"] = "keydown[!shiftKey && key=='Enter'] from:#chat-input-area, click from:#chat-init-btn"
                 attributes["hx-on--before-request"] = "javascript:document.querySelector('#header').classList.remove('ml-64')"
 

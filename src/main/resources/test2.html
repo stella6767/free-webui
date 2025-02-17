@@ -12,7 +12,7 @@
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans">
 <!-- 헤더: 토글 버튼 포함 -->
-<header id="header" class="bg-gray-800 py-4 px-8 flex items-center transition-all duration-300">
+<header id="header" class="ml-64 bg-gray-800 py-4 px-8 flex items-center transition-all duration-300">
     <div class="hover:bg-[#b4b4b4] w-10 h-10 flex items-center justify-center rounded cursor-pointer">
         <svg id="toggleDrawer" class="w-6 h-6 text-gray-800 dark:text-white"
              aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 17 14">
@@ -22,7 +22,7 @@
     <h1 class="text-2xl font-bold text-white ml-3">ChatGPT-like UI</h1>
 
     <aside id="drawer"
-           class="fixed top-0 left-0 h-full w-64 bg-gray-800 p-4 transform -translate-x-full transition-transform duration-300 z-10">
+           class="fixed top-0 left-0 h-full w-64 bg-gray-800 p-4 transform transition-transform duration-300 z-10">
         <div class="flex items-center cursor-pointer font-sans text-base font-medium h-11 leading-5 pl-2.5 pr-2.5 break-words text-[#f8fafc]">
             <div class="mr-2">
                 <svg class="w-7 h-7" fill="none" viewBox="0 0 28 28">
@@ -40,13 +40,33 @@
 
         <nav class="mt-5">
             <ul class="space-y-2">
-                <li class="truncate group relative">
-                    <span class="text-gray-300 hover:text-white">이 내용이 너무 길어서 화면을 넘어갈 경우 ... 으로 처리됩니다.</span>
-                    <div class="absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <li class="truncate group" hx-trigger="click" hx-get="/chat/53">
+                    <span class="truncate text-gray-300 hover:text-white">이 내용이 너무 길어서 화면을 넘어갈 경우 ... 으로 처리됩니다.</span>
+
+                    <div id="dropdownHoverButton-1" data-dropdown-toggle="dropdownHover-1" data-dropdown-trigger="hover" class="absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer">
                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="icon-md">
                             <path fill-rule="evenodd" clip-rule="evenodd" d="M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z" fill="currentColor"></path>
                         </svg>
                     </div>
+
+                    <!-- Dropdown menu -->
+                    <div id="dropdownHover-1"
+                         class="z-30 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton">
+                            <li>
+                                <a href="#"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                            </li>
+                            <li>
+                                <a href="#"
+                                   class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                            </li>
+                        </ul>
+                    </div>
+
+
+
+
                 </li>
                 <li class="truncate group relative">
                     <span class="text-gray-300 hover:text-white">모델 관리</span>
@@ -57,7 +77,23 @@
                     </div>
 
                 </li>
-                <li><a href="#" class="text-gray-300 hover:text-white">설정</a></li>
+
+
+                <li class="truncate group cursor-pointer hover:bg-[#b4b4b480]" id="chat-li-52" hx-trigger="click" hx-get="/chat/52" hx-target="#main-container" hx-push-url="true"><span class="text-gray-300 hover:text-white">hi</span>
+                    <div class="absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer" id="dropdownHoverButton-52" data-dropdown-toggle="dropdownHover-52" data-dropdown-trigger="hover">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon-md" width="24" height="24" viewBox="0 0 24 24" fill="none">
+                            <path fill-rule="evenodd" clip-rule="evenodd" d="M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z" fill="currentColor"></path>
+                        </svg>
+                    </div>
+                    <div class="z-30 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700" id="dropdownHover-52">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownHoverButton-52">
+                            <li><span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Rename</span></li>
+                            <li><span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</span></li>
+                        </ul>
+                    </div>
+                </li>
+
+
             </ul>
         </nav>
 
@@ -75,7 +111,7 @@
     <!-- 왼쪽 드로어: 기본적으로 숨김 (-translate-x-full 사용) -->
 
     <!-- 메인 콘텐츠 영역 -->
-    <main id="content" class="flex flex-col flex-1 h-[90vh] xl:px-48 py-6 transition-all duration-300">
+    <main id="content" class="ml-64 flex flex-col flex-1 h-[90vh] xl:px-48 py-6 transition-all duration-300">
         <!-- 채팅 영역 -->
         <section id="chatArea" class="flex-1 p-4 overflow-y-auto space-y-4">
             <!-- 초기 AI 메시지 -->

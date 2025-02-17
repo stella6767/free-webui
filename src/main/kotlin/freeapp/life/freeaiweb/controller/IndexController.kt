@@ -17,9 +17,11 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.net.URI
@@ -34,10 +36,15 @@ class IndexController(
     private val log = KotlinLogging.logger {  }
 
     @GetMapping("/")
-    fun index(): String {
-        return renderPageWithLayout {
-            chatInitialView()
-        }
+    fun index(
+        request: HttpServletRequest,
+    ): String {
+
+        val html = if (request?.getHeader("HX-Request") == null) {
+            renderPageWithLayout { chatInitialView() }
+        } else renderComponent { div { newChatView() } }
+
+        return html
     }
 
     @PostMapping("/chat")
@@ -58,6 +65,23 @@ class IndexController(
         headers.add("HX-Push", "/chat/${chatDto.id}")
         return ResponseEntity(renderComponent, headers, HttpStatus.OK)
     }
+
+    @PutMapping("/chat/{id}")
+    fun updateChat(
+        @PathVariable id: String,
+        chatReqDto: ChatReqDto
+    ){
+
+        println(chatReqDto)
+
+        chatService.updateChat(chatReqDto)
+    }
+
+
+//    @DeleteMapping("/chat")
+//    fun deleteChat(){
+//
+//    }
 
     @PostMapping("/message")
     fun message(chatReqDto: AiMessageReqDto): String {
@@ -86,16 +110,13 @@ class IndexController(
 
         val chat =
             chatService.findChatRespById(id)
-        //attributes["hx-push-url"] = "/chat/${chat.id}"
+
         val html = if (request?.getHeader("HX-Request") == null) {
             renderPageWithLayout { chatView(chat) }
         } else renderComponent { div { mainContentView(chat) } }
-        
+
         return html
     }
-
-
-
 
     @GetMapping("/chats")
     fun chats(
@@ -110,12 +131,10 @@ class IndexController(
     }
 
 
-
     @GetMapping(path = ["/chat-sse/{clientId}"], produces = [MediaType.TEXT_EVENT_STREAM_VALUE])
     fun streamChat(
         @PathVariable clientId: String,
     ): SseEmitter {
-
         return aiService.connectSse(clientId)
     }
 
