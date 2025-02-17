@@ -19,6 +19,7 @@ fun BODY.chatView(chat: ChatRespDto) {
     }
     div {
         id = "main-container"
+        classes = setOf("ml-64")
         div {
             mainContentView(chat)
         }

@@ -9,8 +9,11 @@ import freeapp.life.freeaiweb.view.*
 import freeapp.life.freeaiweb.view.component.chatFormView
 import freeapp.life.freeaiweb.view.component.chatsNavView
 import jakarta.servlet.http.HttpServletRequest
+import kotlinx.html.classes
 import kotlinx.html.div
+import kotlinx.html.id
 import mu.KotlinLogging
+import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpHeaders
@@ -22,6 +25,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.net.URI
@@ -33,7 +37,7 @@ class IndexController(
     private val chatService: ChatService,
 ) {
 
-    private val log = KotlinLogging.logger {  }
+    private val log = KotlinLogging.logger { }
 
     @GetMapping("/")
     fun index(
@@ -70,7 +74,7 @@ class IndexController(
     fun updateChat(
         @PathVariable id: String,
         chatReqDto: ChatReqDto
-    ){
+    ) {
 
         println(chatReqDto)
 
@@ -82,6 +86,7 @@ class IndexController(
 //    fun deleteChat(){
 //
 //    }
+
 
     @PostMapping("/message")
     fun message(chatReqDto: AiMessageReqDto): String {
@@ -101,7 +106,6 @@ class IndexController(
     }
 
 
-
     @GetMapping("/chat/{id}")
     fun chat(
         @PathVariable id: Long,
@@ -112,20 +116,29 @@ class IndexController(
             chatService.findChatRespById(id)
 
         val html = if (request?.getHeader("HX-Request") == null) {
-            renderPageWithLayout { chatView(chat) }
+            renderPageWithLayout {
+                chatView(chat)
+            }
         } else renderComponent { div { mainContentView(chat) } }
 
         return html
     }
 
+
+
+
     @GetMapping("/chats")
     fun chats(
         @PageableDefault(size = 16) pageable: Pageable,
+        @RequestParam chatId:String = "",
     ): String {
 
         return renderComponent {
             div {
-                chatsNavView(chatService.findChatsByPage(pageable))
+                chatsNavView(
+                    chatService.findChatsByPage(pageable ),
+                    chatId
+                )
             }
         }
     }

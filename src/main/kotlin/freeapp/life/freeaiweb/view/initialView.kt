@@ -13,6 +13,7 @@ fun BODY.chatInitialView() {
     }
     div {
         id = "main-container"
+        classes = setOf("ml-64")
         div {
             newChatView()
         }

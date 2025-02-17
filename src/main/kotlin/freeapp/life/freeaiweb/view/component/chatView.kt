@@ -20,7 +20,6 @@ fun DIV.drawerView() {
             "bg-gray-800",
             "p-4",
             "transform",
-            "-translate-x-full",
             "transition-transform",
             "duration-300",
             "z-10"
@@ -30,75 +29,90 @@ fun DIV.drawerView() {
             id = "chat-nav-box"
             attributes["hx-get"] = "/chats"
             attributes["hx-trigger"] = "load"
+            attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
+
+            classes = setOf("mt-5")
         }
+
     }
 }
 
-fun DIV.chatsNavView(chats: Page<ChatRespDto>) {
-    div {
-        classes = setOf("mt-5")
-        nav {
-            id = "chat-nav-list"
-            ul {
-                classes = setOf("space-y-2")
-                for (chat in chats){
-                    li("truncate group cursor-pointer hover:bg-[#b4b4b480]") {
-                        id = "chat-li-${chat.id}"
-                        attributes["hx-trigger"] = "click"
-                        attributes["hx-get"] = "/chat/${chat.id}"
-                        attributes["hx-target"] = "#main-container"
-                        attributes["hx-push-url"] = "true"
-                        span("text-gray-300 hover:text-white") {
-                            +chat.name
-                        }
 
-                        //todo 해당 chat 선택하면, chat이 색상 변한 상태로 유지
-                        //todo chat rename 시 수정란이 즉시 그 ui에 표시
-                        //todo kotlin gpt 제목 옆에 현재 chat 제목표시
-                        //todo 모델 설정 드랍다운 메뉴
-                        //TODO 아래 깃허브 로고
-                        //todo readme 작성
-                        //todo 도커 이미지 굽고 허브에 올리기
-                        //exe 파일 추출
+fun DIV.chatsNavView(chats: Page<ChatRespDto>, chatId:String = "") {
+    nav {
+        id = "chat-nav-list"
+        ul {
+            classes = setOf("space-y-2")
+            for (chat in chats) {
+                li("truncate group cursor-pointer tab-active hover:bg-[#b4b4b480] ${if (chatId == chat.id.toString()) "bg-[#b4b4b480]" else ""}") {
+                    id = "chat-li-${chat.id}"
+                    attributes["hx-trigger"] = "click"
+                    attributes["hx-get"] = "/chat/${chat.id}"
+                    attributes["hx-target"] = "#main-container"
+                    attributes["hx-push-url"] = "true"
+                    attributes["hx-on--after-on-load"] =
+                        """
+                               let currentTab = document.querySelector('.bg-\\[\\#b4b4b480\\]');
+                               if(currentTab) {
+                                 currentTab.classList.remove('bg-[#b4b4b480]');
+                               }
+                               let newTab = event.target                  
+                               newTab.classList.add('bg-[#b4b4b480]')                            
+                            """.trimIndent()
 
-                        div("absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer") {
-                            id = "dropdownHoverButton-${chat.id}"
-                            attributes["data-dropdown-toggle"] = "dropdownHover-${chat.id}"
-                            attributes["data-dropdown-trigger"] = "hover"
-                            svg("icon-md") {
-                                attributes["width"] = "24"
-                                attributes["height"] = "24"
-                                attributes["viewbox"] = "0 0 24 24"
-                                attributes["fill"] = "none"
-                                //attributes["xmlns"] = "http://www.w3.org/2000/svg"
-                                path {
-                                    attributes["fill-rule"] = "evenodd"
-                                    attributes["clip-rule"] = "evenodd"
-                                    attributes["d"] =
-                                        "M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z"
-                                    attributes["fill"] = "currentColor"
-                                }
+
+                    span("text-gray-300 hover:text-white") {
+                        +chat.name
+                    }
+
+                    //todo 해당 chat 선택하면, chat이 색상 변한 상태로 유지
+                    //todo chat rename 시 수정란이 즉시 그 ui에 표시
+                    //todo kotlin gpt 제목 옆에 현재 chat 제목표시
+                    //todo 모델 설정 드랍다운 메뉴
+                    //TODO 아래 깃허브 로고
+                    //todo readme 작성
+                    //todo 도커 이미지 굽고 허브에 올리기
+                    //todo 로딩 표시 및 인피니트 스크롤 페이징 처리
+                    //todo 일어날때마다 사이드바 트리거.
+                    //exe 파일 추출
+
+                    div("absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer") {
+                        id = "dropdownHoverButton-${chat.id}"
+                        attributes["data-dropdown-toggle"] = "dropdownHover-${chat.id}"
+                        attributes["data-dropdown-trigger"] = "hover"
+                        svg("icon-md") {
+                            attributes["width"] = "24"
+                            attributes["height"] = "24"
+                            attributes["viewbox"] = "0 0 24 24"
+                            attributes["fill"] = "none"
+                            //attributes["xmlns"] = "http://www.w3.org/2000/svg"
+                            path {
+                                attributes["fill-rule"] = "evenodd"
+                                attributes["clip-rule"] = "evenodd"
+                                attributes["d"] =
+                                    "M3 12C3 10.8954 3.89543 10 5 10C6.10457 10 7 10.8954 7 12C7 13.1046 6.10457 14 5 14C3.89543 14 3 13.1046 3 12ZM10 12C10 10.8954 10.8954 10 12 10C13.1046 10 14 10.8954 14 12C14 13.1046 13.1046 14 12 14C10.8954 14 10 13.1046 10 12ZM17 12C17 10.8954 17.8954 10 19 10C20.1046 10 21 10.8954 21 12C21 13.1046 20.1046 14 19 14C17.8954 14 17 13.1046 17 12Z"
+                                attributes["fill"] = "currentColor"
                             }
                         }
-                        div("z-30 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700") {
-                            id = "dropdownHover-${chat.id}"
-                            ul("py-2 text-sm text-gray-700 dark:text-gray-200") {
-                                attributes["aria-labelledby"] = "dropdownHoverButton-${chat.id}"
-                                li {
-                                    span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
-                                        +"Rename"
-                                    }
+                    }
+                    div("z-30 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700") {
+                        id = "dropdownHover-${chat.id}"
+                        ul("py-2 text-sm text-gray-700 dark:text-gray-200") {
+                            attributes["aria-labelledby"] = "dropdownHoverButton-${chat.id}"
+                            li {
+                                span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
+                                    +"Rename"
                                 }
-                                li {
-                                    span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
-                                        +"Delete"
-                                    }
+                            }
+                            li {
+                                span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
+                                    +"Delete"
                                 }
                             }
                         }
                     }
-
                 }
+
             }
         }
     }
@@ -212,9 +226,10 @@ fun DIV.chatFormView() {
 fun HEADER.headerView() {
 
     id = "header"
-    classes = setOf("bg-gray-800", "py-4", "px-8", "flex", "items-center", "transition-all", "duration-300")
+    classes = setOf("bg-gray-800", "py-4", "px-8", "flex", "items-center", "transition-all", "duration-300", "ml-64")
     drawerToggleBtnView()
     h1 {
+        id = "header-title"
         classes = setOf("text-2xl", "font-bold", "text-white", "ml-3", "cursor-pointer")
         attributes["onclick"] = "window.location.href='/'"
         +"Kotlin GPT"
