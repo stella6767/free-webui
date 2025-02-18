@@ -29,26 +29,28 @@ fun DIV.drawerView(chat: ChatRespDto?) {
             id = "chat-nav-box"
             attributes["hx-get"] = "/chats"
             attributes["hx-trigger"] = "load, newChatEvent from:body"
-            attributes["hx-swap"] = "innerHtml"
-            attributes["hx-on--after-settle"] = "javascript:menualInitFlowbite()"
-            classes = setOf("mt-5")
+            attributes["hx-swap"] = "outerHtml"
+            attributes["hx-target"] = "#chat-nav-list"
+//        attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
+//        attributes["hx-vals"] = """js:{"chatId": ${chat?.id ?: 0}}"""
+            attributes["hx-vals"] = """js:{"chatId": document.getElementById("chat-id-box").value}"""
+            //attributes["hx-on--after-settle"] = "javascript:menualInitFlowbite()"
+            attributes["hx-on--after-request"] = "javascript:menualInitFlowbite()"
 
-            chatsNavView(Page.empty(), chat)
+            classes = setOf("mt-5")
         }
 
+        div {
+            //hx-vals 침범 막기 위해.. 자식 태그가 아닌 밖으로 빼놓음.
+            id = "chat-nav-list"
+            chatsNavView(Page.empty(), chat)
+        }
     }
 }
 
 
 fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
     nav {
-        id = "chat-nav-list"
-//        //attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
-//        attributes["hx-vals"] = """js:{"chatId": ${currentChat?.id ?: 0}}"""
-//        attributes["hx-on--after-settle"] = "javascript:menualInitFlowbite()"
-//        //attributes["hx-swap-oob"] = "true"
-
-
         ul {
             classes = setOf("space-y-2")
             for (chat in chats) {
@@ -56,8 +58,7 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                 div("flex truncate group cursor-pointer tab-active hover:bg-[#b4b4b480] $selectedColor") {
                     id = "chat-li-${chat.id}"
                     attributes["hx-on--after-on-load"] =
-                        """
-                                                                        
+                        """                                               
                        let currentTab = document.querySelector('#chat-nav-list');
                        if (currentTab) {
                            currentTab.classList.remove('bg-[#b4b4b480]');
@@ -75,8 +76,6 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                         attributes["hx-target"] = "#main-container"
                         attributes["hx-swap"] = "innerHTML"
                         attributes["hx-push-url"] = "true"
-
-
                         +chat.name
                     }
 

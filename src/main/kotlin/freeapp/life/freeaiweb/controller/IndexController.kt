@@ -41,13 +41,15 @@ class IndexController(
     @GetMapping("/")
     fun index(
         request: HttpServletRequest,
-    ): String {
+    ): ResponseEntity<String> {
 
         val html = if (request?.getHeader("HX-Request") == null) {
             renderPageWithLayout { chatInitialView() }
         } else renderComponent { div { newChatView() } }
 
-        return html
+        val headers = HttpHeaders()
+        //headers.add("HX-Trigger", "chatsEvent")
+        return ResponseEntity(html, headers, HttpStatus.OK)
     }
 
     @PostMapping("/chat")
