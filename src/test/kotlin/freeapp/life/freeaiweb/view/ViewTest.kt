@@ -15,6 +15,14 @@ class ViewTest {
 
 
     @Test
+    fun convertTest(){
+        val chatId:String = "asd"
+        val toLong = chatId.toLong()
+        println(toLong)
+
+    }
+
+    @Test
     fun kotlinHtmlTest(){
 //        val htmlContent = createHTML().div {
 //            // htmx 관련 속성을 최초 설정 (예: hx-get 속성)

@@ -6,11 +6,12 @@ import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.service.AiService
 import freeapp.life.freeaiweb.service.ChatService
 import freeapp.life.freeaiweb.view.*
-import freeapp.life.freeaiweb.view.component.chatFormView
 import freeapp.life.freeaiweb.view.component.chatsNavView
+import freeapp.life.freeaiweb.view.component.headerView
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.html.classes
 import kotlinx.html.div
+import kotlinx.html.header
 import kotlinx.html.id
 import mu.KotlinLogging
 import org.springframework.data.domain.PageRequest
@@ -20,7 +21,6 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
-import java.net.URI
 
 
 @RestController
@@ -63,25 +62,14 @@ class IndexController(
         val renderComponent = renderComponent {
             div {
                 mainContentView(chatDto)
-
-                div {
-                    id = "chat-id-box"
-                    attributes["hx-get"] = "/chats"
-                    attributes["hx-trigger"] = "load, chatsEvent from:body"
-                    attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
-                    attributes["hx-swap-oob"] = "true"
-                    classes = setOf("mt-5")
-                    chatsNavView(
-                        chatService.findChatsByPage(PageRequest.of(0, 16)),
-                        msgPair.chat.id.toString()
-                    )
-                }
+                chatIdHiddenView(chatDto.id)
             }
         }
+
         val headers = HttpHeaders()
         headers.add("HX-Push", "/chat/${chatDto.id}")
         //headers.add("HX-Trigger", "chatsEvent")
-        headers.add("HX-Trigger-After-Swap", "chatsEvent")
+        headers.add("HX-Trigger-After-Swap", "newChatEvent")
 
         return ResponseEntity(renderComponent, headers, HttpStatus.OK)
     }
@@ -114,7 +102,6 @@ class IndexController(
             div {
                 msgPairBlockView(
                     msgPair,
-                    msgPair.chat.id.toString()
                 )
             }
         }
@@ -135,7 +122,9 @@ class IndexController(
             renderPageWithLayout {
                 chatView(chat)
             }
-        } else renderComponent { div { mainContentView(chat) } }
+        } else renderComponent {
+            div { mainContentView(chat) }
+        }
 
         return html
     }
@@ -146,14 +135,19 @@ class IndexController(
     @GetMapping("/chats")
     fun chats(
         @PageableDefault(size = 16) pageable: Pageable,
-        @RequestParam chatId:String = "",
+        @RequestParam chatId:Long = 0,
     ): String {
+
+        // 이게 문제...
+        val chat = if (chatId != 0L) {
+            ChatRespDto.fromEntity(chatService.findChatById(chatId), false)
+        } else null
 
         return renderComponent {
             div {
                 chatsNavView(
                     chatService.findChatsByPage(pageable ),
-                    chatId
+                    chat
                 )
             }
         }

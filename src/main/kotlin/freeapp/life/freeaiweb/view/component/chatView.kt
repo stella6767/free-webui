@@ -8,7 +8,7 @@ import kotlinx.html.*
 import org.springframework.data.domain.Page
 import java.util.*
 
-fun DIV.drawerView() {
+fun DIV.drawerView(chat: ChatRespDto?) {
     aside {
         id = "drawer"
         classes = setOf(
@@ -28,40 +28,55 @@ fun DIV.drawerView() {
         div {
             id = "chat-nav-box"
             attributes["hx-get"] = "/chats"
-            attributes["hx-trigger"] = "load, chatsEvent from:body"
-            attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
-
+            attributes["hx-trigger"] = "load, newChatEvent from:body"
+            attributes["hx-swap"] = "innerHtml"
+            attributes["hx-on--after-settle"] = "javascript:menualInitFlowbite()"
             classes = setOf("mt-5")
+
+            chatsNavView(Page.empty(), chat)
         }
 
     }
 }
 
 
-fun DIV.chatsNavView(chats: Page<ChatRespDto>, chatId:String = "") {
+fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
     nav {
         id = "chat-nav-list"
+//        //attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
+//        attributes["hx-vals"] = """js:{"chatId": ${currentChat?.id ?: 0}}"""
+//        attributes["hx-on--after-settle"] = "javascript:menualInitFlowbite()"
+//        //attributes["hx-swap-oob"] = "true"
+
+
         ul {
             classes = setOf("space-y-2")
             for (chat in chats) {
-                div("truncate group cursor-pointer tab-active hover:bg-[#b4b4b480] ${if (chatId == chat.id.toString()) "bg-[#b4b4b480]" else ""}") {
+                val selectedColor = if (chat.id == currentChat?.id) "bg-[#b4b4b480]" else ""
+                div("flex truncate group cursor-pointer tab-active hover:bg-[#b4b4b480] $selectedColor") {
                     id = "chat-li-${chat.id}"
-                    attributes["hx-trigger"] = "click"
-                    attributes["hx-get"] = "/chat/${chat.id}"
-                    attributes["hx-target"] = "#main-container"
-                    attributes["hx-push-url"] = "true"
                     attributes["hx-on--after-on-load"] =
                         """
-                               let currentTab = document.querySelector('.bg-\\[\\#b4b4b480\\]');
-                               if(currentTab) {
-                                 currentTab.classList.remove('bg-[#b4b4b480]');
-                               }
-                               let newTab = event.target                  
-                               newTab.classList.add('bg-[#b4b4b480]')                            
-                            """.trimIndent()
+                                                                        
+                       let currentTab = document.querySelector('#chat-nav-list');
+                       if (currentTab) {
+                           currentTab.classList.remove('bg-[#b4b4b480]');
+                           currentTab.querySelectorAll('.bg-\\[\\#b4b4b480\\]').forEach(el => {                          
+                           el.classList.remove('bg-[#b4b4b480]');
+                         });
+                       }                      
+                       let newTab = event.currentTarget                  
+                       newTab.classList.add('bg-[#b4b4b480]')                            
+                    """.trimIndent()
+
+                    div("w-5/6 text-gray-300 hover:text-white") {
+                        attributes["hx-trigger"] = "click"
+                        attributes["hx-get"] = "/chat/${chat.id}"
+                        attributes["hx-target"] = "#main-container"
+                        attributes["hx-swap"] = "innerHTML"
+                        attributes["hx-push-url"] = "true"
 
 
-                    span("text-gray-300 hover:text-white") {
                         +chat.name
                     }
 
@@ -77,7 +92,7 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, chatId:String = "") {
                     //todo 모델명 변경, 관련 설정
                     //exe 파일 추출
 
-                    div("absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer") {
+                    div("w-1/6 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200") {
                         id = "dropdown-btn-${chat.id}"
                         attributes["data-dropdown-toggle"] = "dropdown-${chat.id}"
                         svg("icon-md z-50") {
@@ -96,7 +111,7 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, chatId:String = "") {
                         }
                     }
                     div("z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700") {
-                        id = "dropdown-menu-${chat.id}"
+                        id = "dropdown-${chat.id}"
                         ul("py-2 text-sm text-gray-700 dark:text-gray-200") {
                             attributes["aria-labelledby"] = "dropdown-btn-${chat.id}"
                             li {
@@ -223,10 +238,10 @@ fun DIV.chatFormView() {
 }
 
 
-fun HEADER.headerView() {
-
+fun HEADER.headerView(chat: ChatRespDto?) {
     id = "header"
     classes = setOf("bg-gray-800", "py-4", "px-8", "flex", "items-center", "transition-all", "duration-300", "ml-64")
+
     drawerToggleBtnView()
     h1 {
         id = "header-title"
@@ -235,7 +250,10 @@ fun HEADER.headerView() {
         +"Kotlin GPT"
     }
     div {
-        drawerView()
+        drawerView(chat)
+    }
+    div {
+        chatIdHiddenView(chat?.id ?: 0)
     }
     div {
         sseConnectView()

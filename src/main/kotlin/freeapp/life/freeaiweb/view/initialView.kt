@@ -1,15 +1,14 @@
 package freeapp.life.freeaiweb.view
 
+import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.util.path
-import freeapp.life.freeaiweb.view.component.drawerView
 import freeapp.life.freeaiweb.view.component.headerView
-import freeapp.life.freeaiweb.view.component.sseConnectView
 import kotlinx.html.*
 
 
-fun BODY.chatInitialView() {
+fun BODY.chatInitialView(chat: ChatRespDto? = null) {
     header {
-        headerView()
+        headerView(chat)
     }
     div {
         id = "main-container"

@@ -1,21 +1,16 @@
 package freeapp.life.freeaiweb.view
 
 import freeapp.life.freeaiweb.dto.ChatRespDto
-import freeapp.life.freeaiweb.entity.Chat
 import freeapp.life.freeaiweb.entity.MessagePair
-import freeapp.life.freeaiweb.util.path
 import freeapp.life.freeaiweb.view.component.chatFormView
-import freeapp.life.freeaiweb.view.component.drawerView
 import freeapp.life.freeaiweb.view.component.headerView
 import freeapp.life.freeaiweb.view.component.sseConnectView
 import kotlinx.html.*
-import java.util.UUID
-
 
 
 fun BODY.chatView(chat: ChatRespDto) {
     header {
-        headerView()
+        headerView(chat)
     }
     div {
         id = "main-container"
@@ -34,7 +29,6 @@ fun BODY.chatView(chat: ChatRespDto) {
 
 fun DIV.msgPairBlockView(
     messagePair: MessagePair,
-    chatId: String,
 ) {
     val humanMsg = messagePair.humanMessage.content
     val aiMsg = messagePair.aiMessage?.content ?: ""
@@ -61,9 +55,7 @@ fun DIV.mainContentView(chat: ChatRespDto) {
         section {
             chatAreaView(chat)
         }
-        div {
-            chatIdHiddenView(chat.id.toString())
-        }
+
         div {
             chatFormView()
         }
@@ -83,7 +75,6 @@ fun SECTION.chatAreaView(
         div {
             msgPairBlockView(
                 pair,
-                chat.id.toString()
             )
         }
     }
@@ -92,13 +83,13 @@ fun SECTION.chatAreaView(
 
 
 fun DIV.chatIdHiddenView(
-    chatId: String,
+    chatId: Long,
 ) {
     input {
         type = InputType.hidden
         id = "chat-id-box"
         name = "chatId"
-        value = chatId
+        value = chatId.toString()
         attributes["hx-swap-oob"] = "true"
     }
 }
