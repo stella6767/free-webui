@@ -34,15 +34,18 @@ private fun HTML.defaultHeader() {
     head {
         script {
             src = "/js/htmx.min.js"
+            defer = true
         }
         script {
             src = "/js/sse.js"
+            defer = true
         }
         script {
             src = "/js/custom-htmx.js"
         }
         script {
             src = "/js/tailwind.min.js"
+            defer = true
         }
         script {
             src = "/js/flowbite.min.js"

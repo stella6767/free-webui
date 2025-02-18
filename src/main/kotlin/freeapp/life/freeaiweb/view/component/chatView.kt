@@ -44,7 +44,7 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, chatId:String = "") {
         ul {
             classes = setOf("space-y-2")
             for (chat in chats) {
-                li("truncate group cursor-pointer tab-active hover:bg-[#b4b4b480] ${if (chatId == chat.id.toString()) "bg-[#b4b4b480]" else ""}") {
+                div("truncate group cursor-pointer tab-active hover:bg-[#b4b4b480] ${if (chatId == chat.id.toString()) "bg-[#b4b4b480]" else ""}") {
                     id = "chat-li-${chat.id}"
                     attributes["hx-trigger"] = "click"
                     attributes["hx-get"] = "/chat/${chat.id}"
@@ -74,13 +74,13 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, chatId:String = "") {
                     //todo 도커 이미지 굽고 허브에 올리기
                     //todo 로딩 표시 및 인피니트 스크롤 페이징 처리
                     //todo 일어날때마다 사이드바 트리거.
+                    //todo 모델명 변경, 관련 설정
                     //exe 파일 추출
 
                     div("absolute right-2 transform -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 cursor-pointer") {
-                        id = "dropdownHoverButton-${chat.id}"
-                        attributes["data-dropdown-toggle"] = "dropdownHover-${chat.id}"
-                        attributes["data-dropdown-trigger"] = "hover"
-                        svg("icon-md") {
+                        id = "dropdown-btn-${chat.id}"
+                        attributes["data-dropdown-toggle"] = "dropdown-${chat.id}"
+                        svg("icon-md z-50") {
                             attributes["width"] = "24"
                             attributes["height"] = "24"
                             attributes["viewbox"] = "0 0 24 24"
@@ -95,10 +95,10 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, chatId:String = "") {
                             }
                         }
                     }
-                    div("z-30 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700") {
-                        id = "dropdownHover-${chat.id}"
+                    div("z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700") {
+                        id = "dropdown-menu-${chat.id}"
                         ul("py-2 text-sm text-gray-700 dark:text-gray-200") {
-                            attributes["aria-labelledby"] = "dropdownHoverButton-${chat.id}"
+                            attributes["aria-labelledby"] = "dropdown-btn-${chat.id}"
                             li {
                                 span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
                                     +"Rename"

@@ -65,7 +65,7 @@ class IndexController(
                 mainContentView(chatDto)
 
                 div {
-                    id = "chat-nav-box"
+                    id = "chat-id-box"
                     attributes["hx-get"] = "/chats"
                     attributes["hx-trigger"] = "load, chatsEvent from:body"
                     attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
@@ -81,6 +81,7 @@ class IndexController(
         val headers = HttpHeaders()
         headers.add("HX-Push", "/chat/${chatDto.id}")
         //headers.add("HX-Trigger", "chatsEvent")
+        headers.add("HX-Trigger-After-Swap", "chatsEvent")
 
         return ResponseEntity(renderComponent, headers, HttpStatus.OK)
     }

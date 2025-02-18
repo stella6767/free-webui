@@ -33,8 +33,7 @@ fun DIV.newChatView() {
                 attributes["hx-include"] = "#client-id, #chat-input-area"
                 attributes["hx-target"] = "#main-container"
                 attributes["hx-trigger"] = "keydown[!shiftKey && key=='Enter'] from:#chat-input-area, click from:#chat-init-btn"
-                attributes["hx-on--before-request"] = "javascript:document.querySelector('#header').classList.remove('ml-64')"
-
+                //attributes["hx-on--before-request"] = "javascript:document.querySelector('#header').classList.remove('ml-64')"
                 textArea(classes = "bg-gray-700 w-96 p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500") {
                     id = "chat-input-area"
                     name = "msg"
