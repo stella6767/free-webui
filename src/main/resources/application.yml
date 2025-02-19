@@ -44,7 +44,11 @@ spring:
     ollama:
       base-url: http://localhost:11434/
       chat:
-        model: qwen2:0.5b
+        options:
+          top-k:
+  #      chat:
+#        model: qwen2:0.5b
+
   threads:
     virtual:
       enabled: true

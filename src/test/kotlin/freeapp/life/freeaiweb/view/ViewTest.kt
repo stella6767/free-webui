@@ -10,6 +10,7 @@ import kotlinx.html.id
 import kotlinx.html.input
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.stream.createHTML
+import org.springframework.ai.ollama.api.OllamaOptions
 import java.time.LocalDateTime
 
 import kotlin.test.Test
@@ -18,6 +19,19 @@ class ViewTest {
 
     val chat =
         ChatRespDto(1, "", mutableListOf(), LocalDateTime.now())
+
+
+    @Test
+    fun optionTest(){
+        val options = OllamaOptions()
+
+        println(options.format)
+        println(options.temperature)
+        println(options.topK)
+        println(options.topP)
+
+    }
+
     @Test
     fun downstreamTest() {
 

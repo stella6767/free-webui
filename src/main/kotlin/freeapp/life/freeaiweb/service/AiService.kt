@@ -18,12 +18,12 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class AiService(
-    private val builder: ChatClient.Builder,
+    private val chatClient:ChatClient,
     private val chatService: ChatService,
 ) {
 
     private val log = KotlinLogging.logger { }
-    private val chatClient = builder.build()
+
     private val emitters = ConcurrentHashMap<String, SseEmitter>()
     private val parser: Parser = Parser.builder().build()
     private val renderer: HtmlRenderer = HtmlRenderer.builder().build()
@@ -31,6 +31,7 @@ class AiService(
 
     @Transactional
     fun createMessagePair(messageReqDto: AiMessageReqDto): MessagePair {
+
 
         val chat: Chat =
             if (messageReqDto.chatId != 0L) {

@@ -3,6 +3,7 @@ package freeapp.life.freeaiweb.dto
 import freeapp.life.freeaiweb.entity.Chat
 import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
+import org.springframework.ai.ollama.api.OllamaOptions
 import java.time.LocalDateTime
 
 
@@ -81,13 +82,26 @@ data class ChatReqDto(
 
 
 data class OllamaRequestRto(
-    val model: String = "llama3.1:8b",
-    val prompt: String? = null,
-    //val messages: List<Message>? = null,
-    val isPromptOrMessages: Boolean,
-    val temperature: Double = 0.7,
-    val stream: Boolean = false,
-)
+    val host :String,
+    val model: String,
+    val temperature: Double,
+    val topK : Int,
+    val topP:Double,
+) {
+
+    fun toOllamaOption(): OllamaOptions {
+
+        val options = OllamaOptions.builder()
+            .model(this.model)
+            .temperature(this.temperature)
+            .topK(this.topK)
+            .topP(this.topP)
+            .build()
+
+        return options
+    }
+
+}
 
 
 data class OllamaResponseRto(

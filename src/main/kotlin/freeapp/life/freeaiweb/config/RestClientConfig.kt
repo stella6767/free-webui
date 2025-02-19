@@ -26,7 +26,6 @@ class RestClientConfig(
     private val log = KotlinLogging.logger {  }
 
     private val ollamaUrl = "http://localhost:11434"
-
     @Bean
     fun ollamaClient(): RestClient {
 
