@@ -20,7 +20,6 @@ import java.util.concurrent.ConcurrentHashMap
 class AiService(
     private val builder: ChatClient.Builder,
     private val chatService: ChatService,
-    private val ollamaClient: RestClient,
 ) {
 
     private val log = KotlinLogging.logger { }
@@ -29,45 +28,6 @@ class AiService(
     private val parser: Parser = Parser.builder().build()
     private val renderer: HtmlRenderer = HtmlRenderer.builder().build()
     private val sseConnectionTime = Long.MAX_VALUE
-
-
-//    @Transactional
-//    fun newChat(chatReqDto: ChatReqDto) {
-//
-//        val newChat =
-//            chatService.saveChat(chatReqDto)
-//
-//        val humanMessage =
-//            chatService.saveMessage(Message(content = chatReqDto.msg))
-//
-//        val messagePair = chatService.saveMessagePair(
-//            MessagePair(
-//                humanMessage = humanMessage,
-//                aiMessage = null,
-//                chat = newChat
-//            )
-//        )
-//
-//        val aiResponse = chatClient.prompt(humanMessage.content)
-//            .call()
-//            .chatResponse() ?: throw IllegalArgumentException()
-//
-//        val content = aiResponse.result.output.content
-//
-//        println(aiResponse.metadata)
-//        println(aiResponse.result.output.metadata)
-//
-//        val html = markDownToHtml(accumulated)
-//        val aiMessage =
-//            chatService.saveMessage(messageReqDto.toEntity(html))
-//        println("확인!!! ${aiMessage.id}")
-//        chatService.updateMessagePair(uniqueId, aiMessage)
-//
-//        //sendAiResponse(messagePair.id, messageReqDto)
-//
-//
-//    }
-
 
     @Transactional
     fun createMessagePair(messageReqDto: AiMessageReqDto): MessagePair {

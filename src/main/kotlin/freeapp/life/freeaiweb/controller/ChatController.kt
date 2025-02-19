@@ -13,7 +13,6 @@ import freeapp.life.freeaiweb.view.component.titleChatView
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.html.div
 import kotlinx.html.id
-import kotlinx.html.stream.createHTML
 import mu.KotlinLogging
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -26,7 +25,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 
 @RestController
-class IndexController(
+class ChatController(
     private val aiService: AiService,
     private val chatService: ChatService,
 ) {
@@ -106,6 +105,7 @@ class IndexController(
     fun deleteChat(
         @PathVariable id: Long
     ) {
+
         return chatService.deleteChatById(id)
     }
 

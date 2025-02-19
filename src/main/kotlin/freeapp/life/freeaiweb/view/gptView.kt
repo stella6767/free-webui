@@ -41,7 +41,7 @@ fun DIV.msgPairBlockView(
         id = "ai-response-div-${messagePair.id}"
         classes = setOf("my-1", "p-1")
         unsafe {
-          raw(aiMsg)
+            raw(aiMsg)
         }
     }
 }
@@ -85,6 +85,7 @@ fun SECTION.chatAreaView(
 fun DIV.chatIdHiddenView(
     chatId: Long,
 ) {
+
     input {
         type = InputType.hidden
         id = "chat-id-box"
@@ -92,7 +93,11 @@ fun DIV.chatIdHiddenView(
         value = chatId.toString()
         attributes["hx-swap-oob"] = "true"
     }
+
 }
+
+
+
 
 
 

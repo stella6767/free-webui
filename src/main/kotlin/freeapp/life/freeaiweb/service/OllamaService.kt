@@ -9,12 +9,14 @@ import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.ai.ollama.api.OllamaApi.ChatRequest
 import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestClient
 import java.util.List
 
 
 @Service
 class OllamaService(
-    private val ollamaChatModel: OllamaChatModel
+    private val ollamaChatModel: OllamaChatModel,
+    private val ollamaClient: RestClient,
 ) {
 
     private val log = KotlinLogging.logger {  }

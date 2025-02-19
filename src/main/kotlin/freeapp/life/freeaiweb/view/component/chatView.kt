@@ -70,8 +70,6 @@ fun chatRenameView(
 }
 
 
-
-
 fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
     nav {
         ul {
@@ -94,17 +92,15 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                     """.trimIndent()
 
 
-                        chatNameBoxView(chat)
+                    chatNameBoxView(chat)
 
-
-                    //todo chat rename 시 수정란이 즉시 그 ui에 표시
-                    //todo kotlin gpt 제목 옆에 현재 chat 제목표시
+                    //todo delete 시 현재 페이지 url 보고,
+                    //todo message 페이징 처리
                     //todo 모델 설정 드랍다운 메뉴
                     //TODO 아래 깃허브 로고
                     //todo readme 작성
                     //todo 도커 이미지 굽고 허브에 올리기
                     //todo 로딩 표시 및 인피니트 스크롤 페이징 처리
-                    //todo 일어날때마다 사이드바 트리거.
                     //todo 모델명 변경, 관련 설정
                     //exe 파일 추출
 
@@ -292,7 +288,9 @@ fun HEADER.headerView(chat: ChatRespDto?) {
     val chatName = chat?.name ?: ""
 
     div {
+        classes = setOf("flex", "items-center", "w-full")
         titleChatView(chatName)
+        aiSettingView()
     }
     div {
         drawerView(chat)
@@ -303,12 +301,16 @@ fun HEADER.headerView(chat: ChatRespDto?) {
     div {
         sseConnectView()
     }
+    div {
+        aiSettingModalView()
+    }
 }
 
 fun DIV.titleChatView(chatName: String) {
 
-    div("flex items-center") {
+    div {
         id = "title-chat-box"
+        classes = setOf("flex", "items-center", "w-full")
         attributes["hx-swap-oob"] = "true"
         h1 {
             id = "header-title"
@@ -330,6 +332,83 @@ fun DIV.titleChatView(chatName: String) {
                 }
             }
             h2("text-xl font-bold text-white") { +chatName }
+        }
+    }
+}
+
+
+fun DIV.aiSettingModalView() {
+
+    div("hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full") {
+        id = "default-modal"
+        attributes["tabindex"] = "-1"
+        attributes["aria-hidden"] = "true"
+        div("relative p-4 w-full max-w-2xl max-h-full") {
+            div("relative bg-white rounded-lg shadow-sm dark:bg-gray-700") {
+                div("flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200") {
+                    h3("text-xl font-semibold text-gray-900 dark:text-white") { +"""Terms of Service""" }
+                    button(classes = "text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white") {
+                        type = ButtonType.button
+                        attributes["data-modal-hide"] = "default-modal"
+                        svg("w-3 h-3") {
+                            attributes["aria-hidden"] = "true"
+                            attributes["fill"] = "none"
+                            attributes["viewbox"] = "0 0 14 14"
+                            path {
+                                attributes["stroke"] = "currentColor"
+                                attributes["stroke-linecap"] = "round"
+                                attributes["stroke-linejoin"] = "round"
+                                attributes["stroke-width"] = "2"
+                                attributes["d"] = "m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                            }
+                        }
+                        span("sr-only") { +"""Close modal""" }
+                    }
+                }
+                div("p-4 md:p-5 space-y-4") {
+                    p("text-base leading-relaxed text-gray-500 dark:text-gray-400") { +"""With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.""" }
+                    p("text-base leading-relaxed text-gray-500 dark:text-gray-400") { +"""The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.""" }
+                }
+
+                div("flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600") {
+                    button(classes = "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800") {
+                        attributes["data-modal-hide"] = "default-modal"
+                        +"""I accept"""
+                    }
+                    button(classes = "py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700") {
+                        attributes["data-modal-hide"] = "default-modal"
+
+                        +"""Decline"""
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+fun DIV.aiSettingView() {
+
+    div("ml-auto cursor-pointer hover:bg-[#b4b4b480]") {
+        id = "ai-setting-box"
+        attributes["data-modal-target"] = "default-modal"
+        attributes["data-modal-toggle"] = "default-modal"
+        svg("size-8") {
+            attributes["fill"] = "none"
+            attributes["viewbox"] = "0 0 24 24"
+            attributes["stroke-width"] = "1.5"
+            attributes["stroke"] = "currentColor"
+            path {
+                attributes["stroke-linecap"] = "round"
+                attributes["stroke-linejoin"] = "round"
+                attributes["d"] =
+                    "M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 0 1 0 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 0 1-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 0 1-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 0 1-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 0 1-1.369-.49l-1.297-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 0 1 0-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 0 1-.26-1.43l1.297-2.247a1.125 1.125 0 0 1 1.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28Z"
+            }
+            path {
+                attributes["stroke-linecap"] = "round"
+                attributes["stroke-linejoin"] = "round"
+                attributes["d"] = "M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+            }
         }
     }
 }

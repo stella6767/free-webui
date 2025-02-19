@@ -4,8 +4,10 @@ import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.view.component.chatNameBoxView
+import freeapp.life.freeaiweb.view.component.titleChatView
 import kotlinx.html.div
 import kotlinx.html.id
+import kotlinx.html.input
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.stream.createHTML
 import java.time.LocalDateTime
@@ -14,21 +16,36 @@ import kotlin.test.Test
 
 class ViewTest {
 
+    val chat =
+        ChatRespDto(1, "", mutableListOf(), LocalDateTime.now())
+    @Test
+    fun downstreamTest() {
+
+        val renderComponent = renderComponent {
+            div {
+                mainContentView(chat)
+                chatIdHiddenView(1)
+                titleChatView("??")
+            }
+        }
+
+        println(renderComponent)
+
+    }
 
     @Test
     fun escapeTest() {
 
         val name: String = "test"
 
-        val chat =
-            ChatRespDto(1, "", mutableListOf(), LocalDateTime.now())
+
 
         val html = createHTML().div {
-             chatNameBoxView(chat)
+            chatNameBoxView(chat)
         }
 
         val html2 = buildString {
-            appendHTML().div {  chatNameBoxView(chat) }
+            appendHTML().div { chatNameBoxView(chat) }
         }
 
         val html3 = renderComponent {
