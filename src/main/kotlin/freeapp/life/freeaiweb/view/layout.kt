@@ -21,6 +21,13 @@ fun renderComponent(block: TagConsumer<String>.() -> Unit): String {
     return createHTML().apply(block).finalize()
 }
 
+//fun renderComponent(div: FlowContent.() -> Unit): String {
+//    return createHTML().div {
+//        div()
+//    }
+//}
+
+
 inline fun writePage(crossinline block: HTML.() -> Unit): String {
     return createHTMLDocument().html {
         visit(block)
@@ -42,6 +49,7 @@ private fun HTML.defaultHeader() {
         }
         script {
             src = "/js/custom-htmx.js"
+            defer = true
         }
         script {
             src = "/js/tailwind.min.js"

@@ -35,11 +35,18 @@ class ChatService(
     }
 
     @Transactional
-    fun updateMessagePair(id:Long, aiMessage: Message){
+    fun updateMessagePair(id: Long, aiMessage: Message) {
         val messagePair =
             chatRepository.findMessagePairById(id) ?: throw EntityNotFoundException()
 
         messagePair.aiMessage = aiMessage
+    }
+
+
+    @Transactional
+    fun deleteChatById(id: Long) {
+
+        return chatRepository.deleteById(id)
     }
 
 
@@ -52,7 +59,7 @@ class ChatService(
 
 
     @Transactional(readOnly = true)
-    fun findChatRespById(chatId:Long): ChatRespDto {
+    fun findChatRespById(chatId: Long): ChatRespDto {
         val chat = findChatById(chatId)
         return ChatRespDto.fromEntity(chat, true)
     }
@@ -68,8 +75,6 @@ class ChatService(
 
     @Transactional
     fun updateChat(chatReqDto: ChatReqDto) {
-
-
 
 
         TODO("Not yet implemented")

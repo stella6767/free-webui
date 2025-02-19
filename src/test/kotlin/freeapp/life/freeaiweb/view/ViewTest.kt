@@ -4,8 +4,10 @@ import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.entity.MessagePair
-import kotlinx.html.classes
-import kotlinx.html.div
+import freeapp.life.freeaiweb.view.component.chatRenameView
+import freeapp.life.freeaiweb.view.component.sseConnectView
+import freeapp.life.freeaiweb.view.component.titleChatView
+import kotlinx.html.*
 import kotlinx.html.stream.createHTML
 import org.junit.jupiter.api.Assertions.*
 import java.time.LocalDateTime
@@ -15,15 +17,46 @@ class ViewTest {
 
 
     @Test
-    fun convertTest(){
-        val chatId:String = "asd"
-        val toLong = chatId.toLong()
-        println(toLong)
+    fun escapeTest() {
+
+        val name: String = "test"
+
+//        val html = renderComponent {
+//            li {
+//                attributes["hx-get"] = "/chat/rename/1"
+//                attributes["hx-trigger"] = "click"
+//                attributes["hx-target"] = "#chat-name-div-1"
+//                attributes["hx-swap"] = "outerHTML"
+//                //attributes["hx-vals"] = """{"name": "${name}"}"""
+//                //attributes["hx-vals"] = "{&quot;name&quot;: &quot;why&quot;}"
+//                attributes["hx-vals"] = """js:{"chatId": document.getElementById("chat-id-box").textContent}"""
+//                //attributes["hx-vals"] = """js:{"name": document.getElementById("chat-name-div-${chat.id}").value}"""
+//
+//                span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
+//                    +"Rename"
+//                }
+//            }
+//        }
+//
+//        println(html)
+//
+//        val html2 = renderComponent {
+//            chatRenameView(1, name)
+//        }
+//
+//        println(html2)
+//        println(chatRenameView(1, name))
+
+        val component = renderComponent {
+            titleChatView("")
+        }
+
+        println(component)
 
     }
 
     @Test
-    fun kotlinHtmlTest(){
+    fun kotlinHtmlTest() {
 //        val htmlContent = createHTML().div {
 //            // htmx 관련 속성을 최초 설정 (예: hx-get 속성)
 //            attributes["hx-get"] = "/initial-endpoint"

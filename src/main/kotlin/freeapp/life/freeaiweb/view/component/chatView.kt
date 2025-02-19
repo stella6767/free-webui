@@ -5,6 +5,7 @@ import freeapp.life.freeaiweb.util.path
 import freeapp.life.freeaiweb.view.chatIdHiddenView
 
 import kotlinx.html.*
+import kotlinx.html.stream.createHTML
 import org.springframework.data.domain.Page
 import java.util.*
 
@@ -29,7 +30,7 @@ fun DIV.drawerView(chat: ChatRespDto?) {
             id = "chat-nav-box"
             attributes["hx-get"] = "/chats"
             attributes["hx-trigger"] = "load, newChatEvent from:body"
-            attributes["hx-swap"] = "outerHtml"
+            attributes["hx-swap"] = "outerHTML"
             attributes["hx-target"] = "#chat-nav-list"
 //        attributes["hx-vals"] = """js:{"chatId": window.location.pathname.split("/").pop()}"""
 //        attributes["hx-vals"] = """js:{"chatId": ${chat?.id ?: 0}}"""
@@ -48,6 +49,20 @@ fun DIV.drawerView(chat: ChatRespDto?) {
     }
 }
 
+
+fun chatRenameView(
+    uniqueId: Long,
+    name: String,
+): String {
+    return createHTML().div("w-5/6 text-gray-300 hover:text-white") {
+        id = "chat-name-div-${uniqueId}"
+        contentEditable = true
+        attributes["hx-trigger"] = "keyup[enter] blur"
+        attributes["hx-put"] = "/chat/${uniqueId}"
+        attributes["hx-swap"] = "outerHTML"
+        +name
+    }
+}
 
 fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
     nav {
@@ -71,6 +86,7 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                     """.trimIndent()
 
                     div("w-5/6 text-gray-300 hover:text-white") {
+                        id = "chat-name-div-${chat.id}"
                         attributes["hx-trigger"] = "click"
                         attributes["hx-get"] = "/chat/${chat.id}"
                         attributes["hx-target"] = "#main-container"
@@ -79,7 +95,7 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                         +chat.name
                     }
 
-                    //todo 해당 chat 선택하면, chat이 색상 변한 상태로 유지
+
                     //todo chat rename 시 수정란이 즉시 그 ui에 표시
                     //todo kotlin gpt 제목 옆에 현재 chat 제목표시
                     //todo 모델 설정 드랍다운 메뉴
@@ -114,11 +130,27 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                         ul("py-2 text-sm text-gray-700 dark:text-gray-200") {
                             attributes["aria-labelledby"] = "dropdown-btn-${chat.id}"
                             li {
+                                attributes["hx-get"] = "/chat/rename/${chat.id}"
+                                attributes["hx-trigger"] = "click"
+                                attributes["hx-target"] = "#chat-name-div-${chat.id}"
+                                attributes["hx-swap"] = "outerHTML"
+                                attributes["hx-ext"] = "debug"
+                                //attributes["hx-vals"] = """{"name": "${chat.name}"}"""
+                                attributes["hx-vals"] =
+                                    """js:{"name": document.getElementById("chat-name-div-${chat.id}").textContent}"""
                                 span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
                                     +"Rename"
                                 }
                             }
+
+
+
                             li {
+                                attributes["hx-delete"] = "/chat/${chat.id}"
+                                attributes["hx-confirm"] = "Are you sure you wish to delete?"
+                                attributes["hx-trigger"] = "click"
+                                attributes["hx-target"] = "#chat-li-${chat.id}"
+                                attributes["hx-swap"] = "delete"
                                 span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
                                     +"Delete"
                                 }
@@ -242,11 +274,10 @@ fun HEADER.headerView(chat: ChatRespDto?) {
     classes = setOf("bg-gray-800", "py-4", "px-8", "flex", "items-center", "transition-all", "duration-300", "ml-64")
 
     drawerToggleBtnView()
-    h1 {
-        id = "header-title"
-        classes = setOf("text-2xl", "font-bold", "text-white", "ml-3", "cursor-pointer")
-        attributes["onclick"] = "window.location.href='/'"
-        +"Kotlin GPT"
+    val chatName = chat?.name ?: ""
+
+    div {
+        titleChatView(chatName)
     }
     div {
         drawerView(chat)
@@ -254,11 +285,42 @@ fun HEADER.headerView(chat: ChatRespDto?) {
     div {
         chatIdHiddenView(chat?.id ?: 0)
     }
-    div {
-        sseConnectView()
-    }
+
+    chatIdHiddenView(chat?.id ?: 0)
+    sseConnectView()
+
+    titleChatView("")
+
 }
 
+fun FlowContent.titleChatView(chatName: String) {
+
+    div("flex items-center") {
+        id = "title-chat-box"
+        attributes["hx-swap-oob"] = "true"
+        h1 {
+            id = "header-title"
+            classes = setOf("text-2xl", "font-bold", "text-white", "ml-3", "cursor-pointer")
+            attributes["onclick"] = "window.location.href='/'"
+            +"Kotlin GPT"
+        }
+        if (chatName.isNotEmpty()) {
+            svg("mx-3 w-4 h-4 text-gray-800 dark:text-white") {
+                attributes["aria-hidden"] = "true"
+                attributes["fill"] = "none"
+                attributes["viewbox"] = "0 0 8 14"
+                path {
+                    attributes["stroke"] = "currentColor"
+                    attributes["stroke-linecap"] = "round"
+                    attributes["stroke-linejoin"] = "round"
+                    attributes["stroke-width"] = "2"
+                    attributes["d"] = "m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"
+                }
+            }
+            h2("text-xl font-bold text-white") { +chatName }
+        }
+    }
+}
 
 
 fun HEADER.drawerToggleBtnView() {
@@ -295,10 +357,9 @@ fun HEADER.drawerToggleBtnView() {
 }
 
 
-
-fun DIV.sseConnectView(
-    clientId:String = ""
-){
+fun FlowContent.sseConnectView(
+    clientId: String = ""
+) {
     val connectionId = clientId.ifEmpty {
         UUID.randomUUID().toString()
     }

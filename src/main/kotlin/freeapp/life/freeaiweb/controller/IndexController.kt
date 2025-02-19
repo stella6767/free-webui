@@ -6,27 +6,19 @@ import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.service.AiService
 import freeapp.life.freeaiweb.service.ChatService
 import freeapp.life.freeaiweb.view.*
+import freeapp.life.freeaiweb.view.component.chatRenameView
 import freeapp.life.freeaiweb.view.component.chatsNavView
-import freeapp.life.freeaiweb.view.component.headerView
+import freeapp.life.freeaiweb.view.component.titleChatView
 import jakarta.servlet.http.HttpServletRequest
-import kotlinx.html.classes
 import kotlinx.html.div
-import kotlinx.html.header
-import kotlinx.html.id
 import mu.KotlinLogging
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 
 
@@ -45,10 +37,14 @@ class IndexController(
 
         val html = if (request?.getHeader("HX-Request") == null) {
             renderPageWithLayout { chatInitialView() }
-        } else renderComponent { div { newChatView() } }
+        } else renderComponent {
+            div {
+                newChatView()
+                titleChatView("")
+            }
+        }
 
         val headers = HttpHeaders()
-        //headers.add("HX-Trigger", "chatsEvent")
         return ResponseEntity(html, headers, HttpStatus.OK)
     }
 
@@ -62,10 +58,11 @@ class IndexController(
             ChatRespDto.fromEntity(msgPair.chat, true)
 
         val renderComponent = renderComponent {
-            div {
+
                 mainContentView(chatDto)
                 chatIdHiddenView(chatDto.id)
-            }
+                titleChatView(chatDto.name)
+
         }
 
         val headers = HttpHeaders()
@@ -81,17 +78,27 @@ class IndexController(
         @PathVariable id: String,
         chatReqDto: ChatReqDto
     ) {
-
         println(chatReqDto)
-
         chatService.updateChat(chatReqDto)
     }
 
 
-//    @DeleteMapping("/chat")
-//    fun deleteChat(){
-//
-//    }
+    @GetMapping("/chat/rename/{id}")
+    fun returnRenameView(
+        @PathVariable id: Long,
+        @RequestParam name:String,
+    ): String {
+
+        return chatRenameView(id, name)
+    }
+
+
+    @DeleteMapping("/chat/{id}")
+    fun deleteChat(
+        @PathVariable id: Long
+    ) {
+        return chatService.deleteChatById(id)
+    }
 
 
     @PostMapping("/message")
@@ -125,22 +132,22 @@ class IndexController(
                 chatView(chat)
             }
         } else renderComponent {
-            div { mainContentView(chat) }
+            div {
+                mainContentView(chat)
+                titleChatView(chat.name)
+            }
         }
 
         return html
     }
 
 
-
-
     @GetMapping("/chats")
     fun chats(
         @PageableDefault(size = 16) pageable: Pageable,
-        @RequestParam chatId:Long = 0,
+        @RequestParam chatId: Long = 0,
     ): String {
 
-        // 이게 문제...
         val chat = if (chatId != 0L) {
             ChatRespDto.fromEntity(chatService.findChatById(chatId), false)
         } else null
@@ -148,7 +155,7 @@ class IndexController(
         return renderComponent {
             div {
                 chatsNavView(
-                    chatService.findChatsByPage(pageable ),
+                    chatService.findChatsByPage(pageable),
                     chat
                 )
             }

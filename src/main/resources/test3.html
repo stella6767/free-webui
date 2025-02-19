@@ -8,6 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
+    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans">
@@ -174,11 +175,14 @@
             <a href="#"
                class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
         </li>
+
     </ul>
 </div>
 
-<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 14">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
+<svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+     viewBox="0 0 8 14">
+    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+          d="m1 13 5.7-5.326a.909.909 0 0 0 0-1.348L1 1"/>
 </svg>
 
 <div contenteditable="true" class="p-2 border rounded">
@@ -186,39 +190,72 @@
 </div>
 
 
-
-
 <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab" data-tabs-toggle="#default-tab-content" role="tablist">
+    <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="default-tab"
+        data-tabs-toggle="#default-tab-content" role="tablist">
         <li class="me-2" role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Profile</button>
+            <button class="inline-block p-4 border-b-2 rounded-t-lg" id="profile-tab" data-tabs-target="#profile"
+                    type="button" role="tab" aria-controls="profile" aria-selected="false">Profile
+            </button>
         </li>
         <li class="me-2" role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard" aria-selected="false">Dashboard</button>
+            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    id="dashboard-tab" data-tabs-target="#dashboard" type="button" role="tab" aria-controls="dashboard"
+                    aria-selected="false">Dashboard
+            </button>
         </li>
         <li class="me-2" role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">Settings</button>
+            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    id="settings-tab" data-tabs-target="#settings" type="button" role="tab" aria-controls="settings"
+                    aria-selected="false">Settings
+            </button>
         </li>
         <li role="presentation">
-            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="contacts-tab" data-tabs-target="#contacts" type="button" role="tab" aria-controls="contacts" aria-selected="false">Contacts</button>
+            <button class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+                    id="contacts-tab" data-tabs-target="#contacts" type="button" role="tab" aria-controls="contacts"
+                    aria-selected="false">Contacts
+            </button>
         </li>
     </ul>
 </div>
 <div id="default-tab-content">
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel" aria-labelledby="profile-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="profile" role="tabpanel"
+         aria-labelledby="profile-tab">
+        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
+                class="font-medium text-gray-800 dark:text-white">Profile tab's associated content</strong>. Clicking
+            another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
+            the content visibility and styling.</p>
     </div>
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="dashboard" role="tabpanel"
+         aria-labelledby="dashboard-tab">
+        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
+                class="font-medium text-gray-800 dark:text-white">Dashboard tab's associated content</strong>. Clicking
+            another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
+            the content visibility and styling.</p>
     </div>
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="settings" role="tabpanel"
+         aria-labelledby="settings-tab">
+        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
+                class="font-medium text-gray-800 dark:text-white">Settings tab's associated content</strong>. Clicking
+            another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
+            the content visibility and styling.</p>
     </div>
-    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts" role="tabpanel" aria-labelledby="contacts-tab">
-        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong class="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</strong>. Clicking another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control the content visibility and styling.</p>
+    <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="contacts" role="tabpanel"
+         aria-labelledby="contacts-tab">
+        <p class="text-sm text-gray-500 dark:text-gray-400">This is some placeholder content the <strong
+                class="font-medium text-gray-800 dark:text-white">Contacts tab's associated content</strong>. Clicking
+            another tab will toggle the visibility of this one for the next. The tab JavaScript swaps classes to control
+            the content visibility and styling.</p>
     </div>
 </div>
 
+<div hx-get="/chat/rename/1"
+    hx-trigger="click"
+     hx-vals="{&quot;name&quot;: &quot;why&quot;}" >
+  <span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+    Rename
+  </span>
+</div>
 
 </body>
 </html>

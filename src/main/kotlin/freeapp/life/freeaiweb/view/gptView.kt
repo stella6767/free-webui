@@ -82,7 +82,7 @@ fun SECTION.chatAreaView(
 }
 
 
-fun DIV.chatIdHiddenView(
+fun FlowContent.chatIdHiddenView(
     chatId: Long,
 ) {
     input {
