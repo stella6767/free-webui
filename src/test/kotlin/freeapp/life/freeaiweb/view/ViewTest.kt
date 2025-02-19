@@ -2,15 +2,7 @@ package freeapp.life.freeaiweb.view
 
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
-import freeapp.life.freeaiweb.dto.ChatRespDto
-import freeapp.life.freeaiweb.entity.MessagePair
-import freeapp.life.freeaiweb.view.component.chatRenameView
-import freeapp.life.freeaiweb.view.component.sseConnectView
-import freeapp.life.freeaiweb.view.component.titleChatView
-import kotlinx.html.*
-import kotlinx.html.stream.createHTML
-import org.junit.jupiter.api.Assertions.*
-import java.time.LocalDateTime
+
 import kotlin.test.Test
 
 class ViewTest {
@@ -47,11 +39,18 @@ class ViewTest {
 //        println(html2)
 //        println(chatRenameView(1, name))
 
-        val component = renderComponent {
-            titleChatView("")
-        }
-
-        println(component)
+//        val component = renderComponent {
+//            div {
+//                chatRenameView2(0, "")
+//            }
+//        }
+//
+//        val withoutWrap = renderComponentWithoutWrap {
+//            chatRenameView2(0, "")
+//        }
+//
+//        //println(component)
+//        println(withoutWrap)
 
     }
 

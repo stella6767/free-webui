@@ -2,6 +2,7 @@ package freeapp.life.freeaiweb.view.component
 
 import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.util.path
+
 import freeapp.life.freeaiweb.view.chatIdHiddenView
 
 import kotlinx.html.*
@@ -56,13 +57,18 @@ fun chatRenameView(
 ): String {
     return createHTML().div("w-5/6 text-gray-300 hover:text-white") {
         id = "chat-name-div-${uniqueId}"
-        contentEditable = true
-        attributes["hx-trigger"] = "keyup[enter] blur"
+        //attributes["hx-trigger"] = "keydown[key=='Enter'], click from:body *:not(#chat-name-div-${uniqueId})"
         attributes["hx-put"] = "/chat/${uniqueId}"
         attributes["hx-swap"] = "outerHTML"
+        //attributes["hx-on--after-on-load"] = "javascript:this.focus()"
+        attributes["autofocus"] = "autofocus"
+        contentEditable = true
         +name
     }
 }
+
+
+
 
 fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
     nav {
@@ -135,7 +141,9 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                                 attributes["hx-target"] = "#chat-name-div-${chat.id}"
                                 attributes["hx-swap"] = "outerHTML"
                                 attributes["hx-ext"] = "debug"
+                                //attributes["hx-on--after-request"] = "javascript:document.getElementById('chat-name-div-${chat.id}').style.backgroundColor = 'black';"
                                 //attributes["hx-vals"] = """{"name": "${chat.name}"}"""
+                                //attributes["hx-on--after-request"] = "javascript:menualInitFlowbite()"
                                 attributes["hx-vals"] =
                                     """js:{"name": document.getElementById("chat-name-div-${chat.id}").textContent}"""
                                 span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
@@ -285,15 +293,12 @@ fun HEADER.headerView(chat: ChatRespDto?) {
     div {
         chatIdHiddenView(chat?.id ?: 0)
     }
-
-    chatIdHiddenView(chat?.id ?: 0)
-    sseConnectView()
-
-    titleChatView("")
-
+    div {
+        sseConnectView()
+    }
 }
 
-fun FlowContent.titleChatView(chatName: String) {
+fun DIV.titleChatView(chatName: String) {
 
     div("flex items-center") {
         id = "title-chat-box"
@@ -357,7 +362,7 @@ fun HEADER.drawerToggleBtnView() {
 }
 
 
-fun FlowContent.sseConnectView(
+fun DIV.sseConnectView(
     clientId: String = ""
 ) {
     val connectionId = clientId.ifEmpty {

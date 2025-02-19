@@ -10,6 +10,7 @@ function menualInitFlowbite() {
     initFlowbite();
 }
 
+//htmx.logAll();
 
 htmx.defineExtension('debug', {
     onEvent: function(name, evt) {

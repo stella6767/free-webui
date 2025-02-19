@@ -11,6 +11,7 @@ import freeapp.life.freeaiweb.view.component.chatsNavView
 import freeapp.life.freeaiweb.view.component.titleChatView
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.html.div
+import kotlinx.html.id
 import mu.KotlinLogging
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -58,11 +59,11 @@ class IndexController(
             ChatRespDto.fromEntity(msgPair.chat, true)
 
         val renderComponent = renderComponent {
-
+            div {
                 mainContentView(chatDto)
                 chatIdHiddenView(chatDto.id)
                 titleChatView(chatDto.name)
-
+            }
         }
 
         val headers = HttpHeaders()
@@ -154,6 +155,7 @@ class IndexController(
 
         return renderComponent {
             div {
+                id = "chat-nav-list"
                 chatsNavView(
                     chatService.findChatsByPage(pageable),
                     chat

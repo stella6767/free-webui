@@ -21,11 +21,17 @@ fun renderComponent(block: TagConsumer<String>.() -> Unit): String {
     return createHTML().apply(block).finalize()
 }
 
-//fun renderComponent(div: FlowContent.() -> Unit): String {
-//    return createHTML().div {
-//        div()
-//    }
-//}
+fun renderComponentWithoutWrap(block: DIV.() -> Unit): String {
+    val wrappedHtml = createHTML().div {
+        block()
+    }
+    println(wrappedHtml)
+
+    val start = wrappedHtml.indexOf(">") + 1
+    val end = wrappedHtml.lastIndexOf("</div>")
+    return wrappedHtml.substring(start, end)
+}
+
 
 
 inline fun writePage(crossinline block: HTML.() -> Unit): String {
