@@ -39,7 +39,7 @@ fun DIV.msgPairBlockView(
     }
     div {
         id = "ai-response-div-${messagePair.id}"
-        classes = setOf("my-1", "p-1")
+        classes = setOf("my-3", "p-1")
         unsafe {
             raw(aiMsg)
         }
@@ -68,8 +68,8 @@ fun SECTION.chatAreaView(
     chat: ChatRespDto
 ) {
     id = "chatArea"
-    classes = setOf("flex-1", "p-4", "overflow-y-auto", "space-y-4")
-    attributes["hx-on"] = "htmx::afterSwap: this.scrollTop = this.scrollHeight"
+    classes = setOf("flex-1", "p-4", "overflow-y-auto", "space-y-4", "no-scrollbar")
+    attributes["hx-on--after-swap"] = "this.scrollTop = this.scrollHeight"
 
     for (pair in chat.messagePairs) {
         div {

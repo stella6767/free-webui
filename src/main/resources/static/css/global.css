@@ -1,0 +1,9 @@
+/* 웹킷 기반 브라우저 (Chrome, Safari, Edge 등) */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+/* Firefox */
+.no-scrollbar {
+    scrollbar-width: none; /* Firefox에서 슬림하게 */
+    -ms-overflow-style: none; /* IE 10+ */
+}

@@ -10,13 +10,12 @@ import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.context.annotation.Lazy
 import org.springframework.web.client.RestClient
 
 
 @Configuration
-class ChatClientConfig(
-    private val builder: ChatClient.Builder,
-    private val ollamaClient: RestClient,
+class OllamaConfig(
     private val ollamaConnectionProperties: OllamaConnectionProperties,
 ) {
 
@@ -29,8 +28,8 @@ class ChatClientConfig(
         .build()
 
 
-    @PostConstruct
-    fun test(){
+    @Bean
+    fun test(): OllamaChatModel {
 
         println(ollamaConnectionProperties.baseUrl)
         val ollamaApi = OllamaApi(ollamaConnectionProperties.baseUrl)
@@ -41,37 +40,18 @@ class ChatClientConfig(
             listModels.models.minByOrNull { it.size }
 
         println("!!!!")
-
         println(smallestModel)
 
+        defaultOption.model = smallestModel?.model
 
-//        val chatModel = OllamaChatModel.builder()
-//            .ollamaApi(ollamaApi)
-//            .defaultOptions(defaultOption)
-//            .build()
+        val chatModel = OllamaChatModel.builder()
+            .ollamaApi(ollamaApi)
+            .defaultOptions(defaultOption)
+            .build()
 
-
+        return chatModel
     }
 
-
-    @Bean
-    fun chatClient(): ChatClient {
-
-        val ollamaListModelDto = ollamaClient
-            .get()
-            .uri("/api/tags")
-            .retrieve()
-            .body(OllamaListModelDto::class.java)
-
-        val smallestModel =
-            ollamaListModelDto?.models?.minByOrNull { it.size }
-
-        log.info { "defaultModel::$smallestModel" }
-
-        defaultOption.model = smallestModel?.model ?: ""
-
-        return builder.defaultOptions(defaultOption).build()
-    }
 
 
 }

@@ -9,6 +9,8 @@ import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
 import mu.KotlinLogging
 import org.springframework.ai.chat.client.ChatClient
+import org.springframework.ai.ollama.OllamaChatModel
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.client.RestClient
@@ -18,7 +20,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class AiService(
-    private val chatClient:ChatClient,
+    private val chatModel: OllamaChatModel,
     private val chatService: ChatService,
 ) {
 
@@ -31,7 +33,6 @@ class AiService(
 
     @Transactional
     fun createMessagePair(messageReqDto: AiMessageReqDto): MessagePair {
-
 
         val chat: Chat =
             if (messageReqDto.chatId != 0L) {
@@ -66,15 +67,10 @@ class AiService(
 
         // 사용자별 emiiter 가져오기 없으면 만들어내기
         val emitter = emitters.computeIfAbsent(messageReqDto.clientId) {
-            println("why")
             SseEmitter(sseConnectionTime)
         }
 
-        println("?????")
-
-        val aiResponse = chatClient.prompt(messageReqDto.msg)
-            .stream()
-            .content()
+        val aiResponse = chatModel.stream(messageReqDto.msg)
 
         var accumulated = ""
 
