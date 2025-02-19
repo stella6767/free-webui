@@ -42,10 +42,6 @@ class ChatCustomRepositoryImpl(
                 entity(Chat::class),
             ).from(
                 entity(Chat::class),
-            ).where(
-                and(
-                    path(Chat::deletedAt).isNull(),
-                )
             ).orderBy(
                 path(Chat::id).desc(),
             )

@@ -24,7 +24,7 @@ data class AiMessageReqDto(
     fun toChatReqDto(): ChatReqDto {
         val trimMsg = this.msg.trim()
         val name =
-            if (trimMsg.length > 5) trimMsg.substring(0, 5) else trimMsg
+            if (trimMsg.length > 20) trimMsg.substring(0, 20) else trimMsg
         return ChatReqDto(
             name = name
         )
@@ -68,9 +68,13 @@ data class ChatRespDto(
 data class ChatReqDto(
     var name: String = "",
 ) {
-    fun toEntity(): Chat {
+    fun toEntity(id: Long= 0): Chat {
+        val rawName = this.name.trim()
+        val name =
+            if (rawName.length > 20) rawName.substring(0, 20) else rawName
         return Chat(
-            name = this.name
+            id = id,
+            name = name
         )
     }
 }

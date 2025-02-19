@@ -8,7 +8,9 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@3.1.2/dist/flowbite.min.css" rel="stylesheet"/>
-    <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/htmx.org@2.0.4"
+            integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+"
+            crossorigin="anonymous"></script>
 
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans">
@@ -250,12 +252,44 @@
 </div>
 
 <div hx-get="/chat/rename/1"
-    hx-trigger="click"
-     hx-vals="{&quot;name&quot;: &quot;why&quot;}" >
+     hx-trigger="click"
+     hx-vals="{&quot;name&quot;: &quot;why&quot;}">
   <span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
     Rename
   </span>
 </div>
-<div class="w-5/6 text-gray-300 hover:text-white" id="chat-name-div-1" contenteditable="true" hx-trigger="keyup[enter] blur" hx-put="/chat/1" hx-swap="outerHTML">hey</div>
+
+<div class="w-5/6 text-gray-300 hover:text-white" id="chat-name-div-1" style="display:inline;"
+     hx-trigger="keydown[key=='Enter'] from:#chat-name-div-1, blur"
+     hx-on-keyup="handleKeyup(event)"
+     hx-put="/chat/1" hx-swap="outerHTML"
+     autofocus="autofocus" contenteditable="true">sssshi
+</div>
+
+<div hx-on-click="alert('Clicked!')">Click</div>
+
+<div id="input-test" hx-on-keydown="handleKeyup(event)" contenteditable="true" >Test</div>
+<!--hx-on-keyup="handleKeyup(event)"-->
 </body>
+<script>
+
+    document.querySelector('#input-test22').onkeydown = function(e) {
+        // User hits enter key and is not holding shift
+        console.log("tesst");
+        if (e.keyCode === 13) {
+            e.preventDefault()
+        }
+    };
+    function handleKeyup(event) {
+        // Check if the pressed key is Enter
+        if (event.keyCode === 13) {
+            event.preventDefault();
+            console.log('Enter key pressed!');
+            // Call your specific JavaScript function here
+            //return false;
+        }
+
+    }
+</script>
+
 </html>

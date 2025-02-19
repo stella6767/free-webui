@@ -6,12 +6,14 @@ import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.service.AiService
 import freeapp.life.freeaiweb.service.ChatService
 import freeapp.life.freeaiweb.view.*
+import freeapp.life.freeaiweb.view.component.chatNameBoxView
 import freeapp.life.freeaiweb.view.component.chatRenameView
 import freeapp.life.freeaiweb.view.component.chatsNavView
 import freeapp.life.freeaiweb.view.component.titleChatView
 import jakarta.servlet.http.HttpServletRequest
 import kotlinx.html.div
 import kotlinx.html.id
+import kotlinx.html.stream.createHTML
 import mu.KotlinLogging
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -76,11 +78,17 @@ class IndexController(
 
     @PutMapping("/chat/{id}")
     fun updateChat(
-        @PathVariable id: String,
+        @PathVariable id: Long,
         chatReqDto: ChatReqDto
-    ) {
-        println(chatReqDto)
-        chatService.updateChat(chatReqDto)
+    ): String {
+        val chat =
+            chatService.updateChat(id, chatReqDto)
+
+        val html = renderComponentWithoutWrap {
+            chatNameBoxView(chat)
+        }
+
+        return html
     }
 
 

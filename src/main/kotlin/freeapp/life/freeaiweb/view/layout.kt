@@ -25,11 +25,8 @@ fun renderComponentWithoutWrap(block: DIV.() -> Unit): String {
     val wrappedHtml = createHTML().div {
         block()
     }
-    println(wrappedHtml)
-
-    val start = wrappedHtml.indexOf(">") + 1
-    val end = wrappedHtml.lastIndexOf("</div>")
-    return wrappedHtml.substring(start, end)
+    val regex = Regex("^<div[^>]*>(.*)</div>\$", RegexOption.DOT_MATCHES_ALL)
+    return regex.find(wrappedHtml)?.groupValues?.get(1) ?: wrappedHtml
 }
 
 

@@ -23,3 +23,12 @@ htmx.defineExtension('debug', {
         }
     }
 })
+
+
+function handleKeyDown(event) {
+    // Check if the pressed key is Enter
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        console.log('Enter key pressed!');
+    }
+}

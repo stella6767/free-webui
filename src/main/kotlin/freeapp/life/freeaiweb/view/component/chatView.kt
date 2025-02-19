@@ -57,10 +57,12 @@ fun chatRenameView(
 ): String {
     return createHTML().div("w-5/6 text-gray-300 hover:text-white") {
         id = "chat-name-div-${uniqueId}"
-        //attributes["hx-trigger"] = "keydown[key=='Enter'], click from:body *:not(#chat-name-div-${uniqueId})"
+        style = "display:inline;"
+        attributes["hx-trigger"] = "keydown[key=='Enter'] from:#chat-name-div-${uniqueId}, blur"
         attributes["hx-put"] = "/chat/${uniqueId}"
         attributes["hx-swap"] = "outerHTML"
-        //attributes["hx-on--after-on-load"] = "javascript:this.focus()"
+        attributes["hx-vals"] = """js:{"name": document.getElementById("chat-name-div-${uniqueId}").textContent}"""
+        attributes["hx-on-keydown"] = "handleKeyDown(event)"
         attributes["autofocus"] = "autofocus"
         contentEditable = true
         +name
@@ -91,15 +93,8 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                        newTab.classList.add('bg-[#b4b4b480]')                            
                     """.trimIndent()
 
-                    div("w-5/6 text-gray-300 hover:text-white") {
-                        id = "chat-name-div-${chat.id}"
-                        attributes["hx-trigger"] = "click"
-                        attributes["hx-get"] = "/chat/${chat.id}"
-                        attributes["hx-target"] = "#main-container"
-                        attributes["hx-swap"] = "innerHTML"
-                        attributes["hx-push-url"] = "true"
-                        +chat.name
-                    }
+
+                        chatNameBoxView(chat)
 
 
                     //todo chat rename 시 수정란이 즉시 그 ui에 표시
@@ -169,6 +164,18 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
 
             }
         }
+    }
+}
+
+fun DIV.chatNameBoxView(chat: ChatRespDto) {
+    div("w-5/6 text-gray-300 hover:text-white") {
+        id = "chat-name-div-${chat.id}"
+        attributes["hx-trigger"] = "click"
+        attributes["hx-get"] = "/chat/${chat.id}"
+        attributes["hx-target"] = "#main-container"
+        attributes["hx-swap"] = "innerHTML"
+        attributes["hx-push-url"] = "true"
+        +chat.name
     }
 }
 

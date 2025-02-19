@@ -2,6 +2,13 @@ package freeapp.life.freeaiweb.view
 
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
+import freeapp.life.freeaiweb.dto.ChatRespDto
+import freeapp.life.freeaiweb.view.component.chatNameBoxView
+import kotlinx.html.div
+import kotlinx.html.id
+import kotlinx.html.stream.appendHTML
+import kotlinx.html.stream.createHTML
+import java.time.LocalDateTime
 
 import kotlin.test.Test
 
@@ -13,46 +20,33 @@ class ViewTest {
 
         val name: String = "test"
 
-//        val html = renderComponent {
-//            li {
-//                attributes["hx-get"] = "/chat/rename/1"
-//                attributes["hx-trigger"] = "click"
-//                attributes["hx-target"] = "#chat-name-div-1"
-//                attributes["hx-swap"] = "outerHTML"
-//                //attributes["hx-vals"] = """{"name": "${name}"}"""
-//                //attributes["hx-vals"] = "{&quot;name&quot;: &quot;why&quot;}"
-//                attributes["hx-vals"] = """js:{"chatId": document.getElementById("chat-id-box").textContent}"""
-//                //attributes["hx-vals"] = """js:{"name": document.getElementById("chat-name-div-${chat.id}").value}"""
-//
-//                span(classes = "block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white") {
-//                    +"Rename"
-//                }
-//            }
-//        }
-//
-//        println(html)
-//
-//        val html2 = renderComponent {
-//            chatRenameView(1, name)
-//        }
-//
-//        println(html2)
-//        println(chatRenameView(1, name))
+        val chat =
+            ChatRespDto(1, "", mutableListOf(), LocalDateTime.now())
 
-//        val component = renderComponent {
-//            div {
-//                chatRenameView2(0, "")
-//            }
-//        }
-//
-//        val withoutWrap = renderComponentWithoutWrap {
-//            chatRenameView2(0, "")
-//        }
-//
-//        //println(component)
-//        println(withoutWrap)
+        val html = createHTML().div {
+             chatNameBoxView(chat)
+        }
 
+        val html2 = buildString {
+            appendHTML().div {  chatNameBoxView(chat) }
+        }
+
+        val html3 = renderComponent {
+            div {
+                chatNameBoxView(chat)
+            }
+        }
+
+        val html4 = renderComponentWithoutWrap {
+            chatNameBoxView(chat)
+        }
+
+        println(html)
+        println(html2)
+        println(html3)
+        println(html4)
     }
+
 
     @Test
     fun kotlinHtmlTest() {

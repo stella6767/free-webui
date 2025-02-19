@@ -74,10 +74,14 @@ class ChatService(
 
 
     @Transactional
-    fun updateChat(chatReqDto: ChatReqDto) {
+    fun updateChat(id: Long, chatReqDto: ChatReqDto): ChatRespDto {
 
+        val chat =
+            chatRepository.findByIdOrNull(id) ?: throw EntityNotFoundException()
 
-        TODO("Not yet implemented")
+        chat.updateName(chatReqDto.name)
+
+        return ChatRespDto.fromEntity(chat, false)
     }
 
 

@@ -2,6 +2,8 @@ package freeapp.life.freeaiweb.util
 
 import kotlinx.html.*
 
+
+
 @HtmlTagMarker
 inline fun FlowContent.path(classes: String? = null, crossinline block: PATH.() -> Unit = {}): Unit = PATH(
     attributesMapOf("class", classes), consumer
