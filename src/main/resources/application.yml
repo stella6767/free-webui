@@ -46,15 +46,12 @@ spring:
       chat:
         options:
           top-k:
-  #      chat:
+#      chat:
 #        model: qwen2:0.5b
 
   threads:
     virtual:
       enabled: true
-  config:
-    import:
-      - secret.yml
   profiles:
     active:
       - local
@@ -77,8 +74,6 @@ spring:
     activate:
       on-profile:
         - local
-    import:
-      - secret.yml
 
 
 
@@ -97,5 +92,3 @@ spring:
     activate:
       on-profile:
         - prod
-    import:
-      - secret.yml
