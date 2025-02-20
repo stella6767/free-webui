@@ -53,10 +53,8 @@ data class ChatRespDto(
             // 필요한 경우 lazy 로딩된 컬렉션을 명시적으로 초기화하여 MutableList로 변환
             val messagePairs =
                 if (isNeedMsg) {
-                    chat.messagePairs.also { list ->
-                        list.forEach { pair ->
-                            pair.aiMessage?.content = pair.aiMessage?.content?.let { Jsoup.clean(it, Safelist.relaxed()) } ?: ""
-                        }
+                    chat.messagePairs.onEach { pair ->
+                        pair.aiMessage?.content = pair.aiMessage?.content?.let { Jsoup.clean(it, Safelist.relaxed()) } ?: ""
                     }.toMutableList()
                 } else mutableListOf()
 

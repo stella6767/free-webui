@@ -94,7 +94,7 @@ class ChatController(
     @GetMapping("/chat/rename/{id}")
     fun returnRenameView(
         @PathVariable id: Long,
-        @RequestParam name:String,
+        @RequestParam name: String,
     ): String {
 
         return chatRenameView(id, name)
@@ -153,7 +153,7 @@ class ChatController(
 
     @GetMapping("/chats")
     fun chats(
-        @PageableDefault(size = 16) pageable: Pageable,
+        @PageableDefault(size = 20) pageable: Pageable,
         @RequestParam chatId: Long = 0,
     ): String {
 
@@ -161,14 +161,13 @@ class ChatController(
             ChatRespDto.fromEntity(chatService.findChatById(chatId), false)
         } else null
 
-        return renderComponent {
-            div {
-                id = "chat-nav-list"
-                chatsNavView(
-                    chatService.findChatsByPage(pageable),
-                    chat
-                )
-            }
+        val chatsByPage = chatService.findChatsByPage(pageable)
+
+        return renderComponentWithoutWrap {
+            chatsNavView(
+                chatsByPage,
+                chat
+            )
         }
     }
 

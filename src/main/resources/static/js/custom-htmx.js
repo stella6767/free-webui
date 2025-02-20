@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
     const chatArea = document.getElementById('chatArea');
-    chatArea.scrollTop = chatArea.scrollHeight;
+    if (chatArea) {
+        chatArea.scrollTop = chatArea.scrollHeight;
+    }
 });
 
 
