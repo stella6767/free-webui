@@ -122,10 +122,8 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                     chatNameBoxView(chat)
 
                     //todo delete 시 현재 페이지 url 보고,
-                    //TODO 아래 깃허브 로고
                     //todo readme 작성
                     //todo 도커 이미지 굽고 허브에 올리기
-                    //todo 로딩 표시 및 인피니트 스크롤 페이징 처리
                     //exe 파일 추출
 
                     div("w-1/6 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200") {
