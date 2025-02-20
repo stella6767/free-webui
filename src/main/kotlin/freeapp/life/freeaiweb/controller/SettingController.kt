@@ -1,10 +1,14 @@
 package freeapp.life.freeaiweb.controller
 
+import freeapp.life.freeaiweb.dto.OllamaRequestRto
 import freeapp.life.freeaiweb.service.OllamaService
+import freeapp.life.freeaiweb.view.component.setModelFormView
+import freeapp.life.freeaiweb.view.renderComponentWithoutWrap
 import mu.KotlinLogging
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RestController
 import reactor.core.publisher.Flux
 
@@ -18,18 +22,21 @@ class SettingController(
     private val log = KotlinLogging.logger { }
 
 
-    @GetMapping("/model")
-    fun model(): Flux<String> {
+    @GetMapping("/setting")
+    fun getSetting(): String {
 
-//        val call = chatModel.call("requestRto.prompt")
-        val stream = chatModel.stream("hi")
+        val modelSetting =
+            ollamaService.getModelSetting()
 
-        return stream
+        return renderComponentWithoutWrap {
+            setModelFormView(modelSetting)
+        }
     }
 
-    @PostMapping("/model")
-    fun setModel() {
+    @PutMapping("/setting")
+    fun updateSetting(ollamaRequestRto: OllamaRequestRto) {
 
+        ollamaService.updateChatClient(ollamaRequestRto)
     }
 
 

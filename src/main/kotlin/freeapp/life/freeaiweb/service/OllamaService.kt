@@ -1,98 +1,68 @@
 package freeapp.life.freeaiweb.service
 
+import AIModelDto
+import freeapp.life.freeaiweb.dto.ChatModelHolder
 import freeapp.life.freeaiweb.dto.OllamaRequestRto
 import freeapp.life.freeaiweb.dto.OllamaResponseRto
+import freeapp.life.freeaiweb.util.ollamaHost
 import mu.KotlinLogging
-import org.springframework.ai.chat.client.ChatClient
-import org.springframework.ai.chat.client.ChatClient.Builder
+import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestClient
+import java.util.concurrent.ConcurrentHashMap
 
 
 @Service
 class OllamaService(
-    private val chatModel: OllamaChatModel,
+    private val chatModelHolder: ChatModelHolder,
 ) {
 
-    private val log = KotlinLogging.logger {  }
+    private val log = KotlinLogging.logger { }
 
-    fun test(){
-        //chatModel.defaultOptions
+    fun getModelSetting(): OllamaResponseRto {
 
+        val chatModel =
+            chatModelHolder.getChatModel()
 
+        val options =
+            chatModel.defaultOptions
+
+        val ollamaApi = OllamaApi(ollamaHost)
+
+        val models = ollamaApi.listModels().models.map {
+            AIModelDto(
+                model = it.model,
+                digest = it.digest,
+                name = it.name,
+                size = it.size
+            )
+        }
+
+        return OllamaResponseRto(
+            host = ollamaHost,
+            models,
+            currentModel = options.model ?: "",
+            temperature = options.temperature ?: 0.0,
+            topK = options.topK ?: 0,
+            topP = options.topP ?: 0.0
+        )
     }
 
 
     fun updateChatClient(requestRto: OllamaRequestRto) {
 
         val ollamaApi = OllamaApi(requestRto.host)
-//        val newClient =
-//            chatClient.mutate().defaultOptions(requestRto.toOllamaOption()).build()
+        ollamaHost = requestRto.host
 
-        val listModels = ollamaApi.listModels()
-
-//        println(newClient)
-//        println(chatClient)
-    }
-
-
-    fun generateLlmResponse(requestRto: OllamaRequestRto): OllamaResponseRto? {
-        log.info("Request: {}", requestRto)
-//        if (requestRto.prompt != null) {
-//            return generateBasedOnPrompt(requestRto)
-//        }
-//        else if (requestRto.getMessages() != null) {
-//            return generateBasedOnMessages(requestRto)
-//        }
-        return null
-    }
-
-
-
-
-
-    private fun generateBasedOnPrompt(requestRto: OllamaRequestRto): OllamaResponseRto {
-
-        val options = OllamaOptions.builder()
-            .model("")
-            .temperature(1.0)
-            .topK(1)
-            .topP(2.0)
+        val newChatModel = OllamaChatModel.builder()
+            .ollamaApi(ollamaApi)
+            .defaultOptions(requestRto.toOllamaOption())
             .build()
 
-//        val client2 = builder.defaultOptions(options).build()
-//        //client2.mutate().defaultOptions(options).build()
-//
-//        val chatModel = OllamaChatModel.builder()
-//            .ollamaApi(ollamaApi)
-//            .defaultOptions(options)
-//            .build()
-
-//        val call = chatModel.call("requestRto.prompt")
-//        val stream = chatModel.stream("")
-
-        //val ollamaResponseRto = OllamaResponseRto()
-
-//        ollamaResponseRto.setMessage(call)
-//        return ollamaResponseRto
-
-        TODO()
-
+        chatModelHolder.updateChatModel(newChatModel)
     }
 
-//    private fun generateBasedOnMessages(requestRto: OllamaRequestRto): OllamaResponseRto {
-//        val chatModel: ChatModel = OllamaChatModel(
-//            ollamaApi,
-//            OllamaOptions.create()
-//                .withModel(requestRto.model)
-//                .withTemperature(requestRto.temperature)
-//        )
-//        val ollamaResponseRto = OllamaResponseRto()
-//        ollamaResponseRto.setMessage(chatModel.call(requestRto.getMessages() as Message?))
-//        return ollamaResponseRto
-//    }
 
 }

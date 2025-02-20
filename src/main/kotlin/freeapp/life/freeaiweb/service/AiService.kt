@@ -3,12 +3,14 @@ package freeapp.life.freeaiweb.service
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.AiMessageReqDto
+import freeapp.life.freeaiweb.dto.ChatModelHolder
 import freeapp.life.freeaiweb.dto.ChatReqDto
 import freeapp.life.freeaiweb.entity.Chat
 import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
 import mu.KotlinLogging
 import org.springframework.ai.chat.client.ChatClient
+import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
@@ -20,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 @Service
 class AiService(
-    private val chatModel: OllamaChatModel,
+    private val chatModelHolder: ChatModelHolder,
     private val chatService: ChatService,
 ) {
 
@@ -64,6 +66,7 @@ class AiService(
     ) {
 
         //todo refactoring
+        val chatModel = chatModelHolder.getChatModel()
 
         // 사용자별 emiiter 가져오기 없으면 만들어내기
         val emitter = emitters.computeIfAbsent(messageReqDto.clientId) {

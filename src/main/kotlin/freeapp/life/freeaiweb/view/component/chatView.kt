@@ -1,6 +1,7 @@
 package freeapp.life.freeaiweb.view.component
 
 import freeapp.life.freeaiweb.dto.ChatRespDto
+import freeapp.life.freeaiweb.dto.OllamaResponseRto
 import freeapp.life.freeaiweb.util.path
 
 import freeapp.life.freeaiweb.view.chatIdHiddenView
@@ -96,12 +97,11 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
 
                     //todo delete 시 현재 페이지 url 보고,
                     //todo message 페이징 처리
-                    //todo 모델 설정 드랍다운 메뉴
                     //TODO 아래 깃허브 로고
                     //todo readme 작성
                     //todo 도커 이미지 굽고 허브에 올리기
                     //todo 로딩 표시 및 인피니트 스크롤 페이징 처리
-                    //todo 모델명 변경, 관련 설정
+                    //todo error 공통처리.
                     //exe 파일 추출
 
                     div("w-1/6 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200") {
@@ -339,19 +339,29 @@ fun DIV.titleChatView(chatName: String) {
 
 fun DIV.aiSettingModalView() {
 
-    div("hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full") {
+    div {
         id = "default-modal"
         attributes["tabindex"] = "-1"
         attributes["aria-hidden"] = "true"
-        div("relative p-4 w-full max-w-2xl max-h-full") {
-            div("relative bg-white rounded-lg shadow-sm dark:bg-gray-700") {
-                div("flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600 border-gray-200") {
-                    h3("text-xl font-semibold text-gray-900 dark:text-white") { +"""Terms of Service""" }
-                    button(classes = "text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white") {
+        classes = setOf("hidden", "overflow-y-auto", "overflow-x-hidden", "fixed", "top-0", "right-0", "left-0", "z-50", "justify-center", "items-center", "w-full", "md:inset-0", "h-[calc(100%-1rem)]", "max-h-full")
+        div {
+            classes = setOf("relative", "p-4", "w-full", "max-w-2xl", "max-h-full")
+            div {
+                classes = setOf("relative", "bg-white", "rounded-lg", "shadow-sm", "dark:bg-gray-700")
+                div {
+                    classes = setOf("flex", "items-center", "justify-between", "p-4", "md:p-5", "border-b", "rounded-t", "dark:border-gray-600", "border-gray-200")
+                    h3 {
+                        classes = setOf("text-xl", "font-semibold", "text-gray-900", "dark:text-white")
+                        +"Model Setting"
+                    }
+                    button {
                         type = ButtonType.button
+                        classes = setOf("text-gray-400", "bg-transparent", "hover:bg-gray-200", "hover:text-gray-900", "rounded-lg", "text-sm", "w-8", "h-8", "ms-auto", "inline-flex", "justify-center", "items-center", "dark:hover:bg-gray-600", "dark:hover:text-white")
                         attributes["data-modal-hide"] = "default-modal"
-                        svg("w-3 h-3") {
+                        svg {
+                            classes = setOf("w-3", "h-3")
                             attributes["aria-hidden"] = "true"
+                            attributes["xmlns"] = "http://www.w3.org/2000/svg"
                             attributes["fill"] = "none"
                             attributes["viewbox"] = "0 0 14 14"
                             path {
@@ -362,29 +372,251 @@ fun DIV.aiSettingModalView() {
                                 attributes["d"] = "m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
                             }
                         }
-                        span("sr-only") { +"""Close modal""" }
+                        span {
+                            classes = setOf("sr-only")
+                            +"Close modal"
+                        }
                     }
                 }
-                div("p-4 md:p-5 space-y-4") {
-                    p("text-base leading-relaxed text-gray-500 dark:text-gray-400") { +"""With less than a month to go before the European Union enacts new consumer privacy laws for its citizens, companies around the world are updating their terms of service agreements to comply.""" }
-                    p("text-base leading-relaxed text-gray-500 dark:text-gray-400") { +"""The European Union’s General Data Protection Regulation (G.D.P.R.) goes into effect on May 25 and is meant to ensure a common set of data rights in the European Union. It requires organizations to notify users as soon as possible of high-risk data breaches that could personally affect them.""" }
-                }
 
-                div("flex items-center p-4 md:p-5 border-t border-gray-200 rounded-b dark:border-gray-600") {
-                    button(classes = "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800") {
-                        attributes["data-modal-hide"] = "default-modal"
-                        +"""I accept"""
-                    }
-                    button(classes = "py-2.5 px-5 ms-3 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700") {
-                        attributes["data-modal-hide"] = "default-modal"
-
-                        +"""Decline"""
-                    }
+                div {
+                    attributes["hx-get"] = "/setting"
+                    attributes["hx-trigger"] = "load"
                 }
             }
         }
     }
 
+
+}
+
+fun DIV.setModelFormView(setting: OllamaResponseRto) {
+    id = "ai-set-form-view"
+    form {
+        classes = setOf("")
+        attributes["hx-put"] = "/setting"
+        attributes["hx-swap"] = "none"
+        div {
+            classes = setOf("p-4", "md:p-5", "space-y-4")
+            div {
+                classes = setOf("mb-5")
+                label {
+                    htmlFor = "models"
+                    classes = setOf("block", "mb-2", "text-sm", "font-medium", "text-gray-900", "dark:text-white")
+                    +"Model"
+                }
+                select {
+                    id = "models"
+                    name = "model"
+                    classes = setOf(
+                        "bg-gray-50",
+                        "border",
+                        "border-gray-300",
+                        "text-gray-900",
+                        "text-sm",
+                        "rounded-lg",
+                        "focus:ring-blue-500",
+                        "focus:border-blue-500",
+                        "block",
+                        "w-full",
+                        "p-2.5",
+                        "dark:bg-gray-700",
+                        "dark:border-gray-600",
+                        "dark:placeholder-gray-400",
+                        "dark:text-white",
+                        "dark:focus:ring-blue-500",
+                        "dark:focus:border-blue-500"
+                    )
+
+                    for (model in setting.models) {
+                        option {
+                            if (setting.currentModel == model.model){
+                                selected = true
+                            }
+                            attributes["value"] = model.model
+                            +model.model
+                        }
+                    }
+                }
+            }
+            div {
+                classes = setOf("mb-5")
+                label {
+                    htmlFor = "host"
+                    classes = setOf("block", "mb-2", "text-sm", "font-medium", "text-gray-900", "dark:text-white")
+                    +"Your Host"
+                }
+                input {
+                    name = "host"
+                    type = InputType.text
+                    id = "host"
+                    classes = setOf(
+                        "bg-gray-50",
+                        "border",
+                        "border-gray-300",
+                        "text-gray-900",
+                        "text-sm",
+                        "rounded-lg",
+                        "focus:ring-blue-500",
+                        "focus:border-blue-500",
+                        "block",
+                        "w-full",
+                        "p-2.5",
+                        "dark:bg-gray-700",
+                        "dark:border-gray-600",
+                        "dark:placeholder-gray-400",
+                        "dark:text-white",
+                        "dark:focus:ring-blue-500",
+                        "dark:focus:border-blue-500"
+                    )
+                    attributes["value"] = setting.host
+                    attributes["required"] = ""
+                }
+            }
+            div {
+                classes = setOf("mb-5")
+                label {
+                    htmlFor = "temperature"
+                    classes = setOf("block", "mb-2", "text-sm", "font-medium", "text-gray-900", "dark:text-white")
+                    +"Temperature"
+                }
+                input {
+                    id = "temperature"
+                    name = "temperature"
+                    type = InputType.range
+                    value = setting.temperature.toString()
+                    attributes["min"] = "0"
+                    attributes["max"] = "1"
+                    attributes["step"] = "0.1"
+                    classes = setOf(
+                        "w-full",
+                        "h-2",
+                        "bg-gray-200",
+                        "rounded-lg",
+                        "cursor-pointer",
+                        "dark:bg-gray-600"
+                    )
+                }
+                div {
+                    classes = setOf("flex", "w-full", "justify-between", "px-2", "text-xs")
+                    (0..10).forEach { i ->
+                        span {
+                            // 0부터 1까지, 0.1씩 계산 (i/10.0)
+                            +String.format("%.1f", i / 10.0)
+                        }
+                    }
+                }
+            }
+            div {
+                classes = setOf("mb-5")
+                label {
+                    htmlFor = "topp"
+                    classes = setOf("block", "mb-2", "text-sm", "font-medium", "text-gray-900", "dark:text-white")
+                    +"Top P"
+                }
+                input {
+                    id = "topp"
+                    type = InputType.range
+                    name = "topP"
+                    attributes["value"] = setting.topP.toString()
+                    attributes["min"] = "0"
+                    attributes["max"] = "1"
+                    attributes["step"] = "0.1"
+                    classes = setOf(
+                        "w-full",
+                        "h-2",
+                        "bg-gray-200",
+                        "rounded-lg",
+                        "cursor-pointer",
+                        "dark:bg-gray-700"
+                    )
+                }
+                div {
+                    classes = setOf("flex", "w-full", "justify-between", "px-2", "text-xs")
+                    (0..10).forEach { i ->
+                        span {
+                            // 0부터 1까지, 0.1씩 계산 (i/10.0)
+                            +String.format("%.1f", i / 10.0)
+                        }
+                    }
+                }
+            }
+            div {
+                classes = setOf("mb-5")
+                label {
+                    htmlFor = "number-input"
+                    classes = setOf("block", "mb-2", "text-sm", "font-medium", "text-gray-900", "dark:text-white")
+                    +"Top K"
+                }
+                input {
+                    type = InputType.number
+                    id = "number-input"
+                    name = "topK"
+                    max = "100"
+                    min = "0"
+                    attributes["aria-describedby"] = "helper-text-explanation"
+                    classes = setOf(
+                        "bg-gray-50",
+                        "border",
+                        "border-gray-300",
+                        "text-gray-900",
+                        "text-sm",
+                        "rounded-lg",
+                        "focus:ring-blue-500",
+                        "focus:border-blue-500",
+                        "block",
+                        "w-full",
+                        "p-2.5",
+                        "dark:bg-gray-700",
+                        "dark:border-gray-600",
+                        "dark:placeholder-gray-400",
+                        "dark:text-white",
+                        "dark:focus:ring-blue-500",
+                        "dark:focus:border-blue-500"
+                    )
+                    value = setting.topK.toString()
+                    attributes["required"] = ""
+                }
+            }
+        }
+        div {
+            classes = setOf(
+                "flex",
+                "items-center",
+                "p-4",
+                "md:p-5",
+                "border-t",
+                "border-gray-200",
+                "rounded-b",
+                "dark:border-gray-600",
+                ""
+            )
+            button {
+                type = ButtonType.submit
+                attributes["data-modal-hide"] = "default-modal"
+                classes = setOf(
+                    "text-white",
+                    "bg-blue-700",
+                    "hover:bg-blue-800",
+                    "focus:ring-4",
+                    "focus:outline-none",
+                    "focus:ring-blue-300",
+                    "font-medium",
+                    "rounded-lg",
+                    "text-sm",
+                    "w-full",
+                    "sm:w-auto",
+                    "px-5",
+                    "py-2.5",
+                    "text-center",
+                    "dark:bg-blue-600",
+                    "dark:hover:bg-blue-700",
+                    "dark:focus:ring-blue-800"
+                )
+                +"Change"
+            }
+        }
+    }
 }
 
 fun DIV.aiSettingView() {
