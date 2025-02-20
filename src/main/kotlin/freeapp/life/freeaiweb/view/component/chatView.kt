@@ -101,7 +101,6 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                     //todo readme 작성
                     //todo 도커 이미지 굽고 허브에 올리기
                     //todo 로딩 표시 및 인피니트 스크롤 페이징 처리
-                    //todo error 공통처리.
                     //todo chat 이동시 스크롤 맨 아래로 고정
                     //exe 파일 추출
 
@@ -170,7 +169,7 @@ fun DIV.chatNameBoxView(chat: ChatRespDto) {
         attributes["hx-trigger"] = "click"
         attributes["hx-get"] = "/chat/${chat.id}"
         attributes["hx-target"] = "#main-container"
-        attributes["hx-swap"] = "innerHTML"
+        attributes["hx-swap"] = "innerHTML scroll:#chatArea:bottom"
         attributes["hx-push-url"] = "true"
         +chat.name
     }

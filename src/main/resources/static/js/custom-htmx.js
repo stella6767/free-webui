@@ -1,15 +1,11 @@
-// document.addEventListener("DOMContentLoaded", () => {
-//     document.body.addEventListener('htmx:afterSwap', (e) => {
-//         console.log("flowbite 초기화");
-//         initFlowbite();
-//     });
-// });
+document.addEventListener("DOMContentLoaded", () => {
+    const chatArea = document.getElementById('chatArea');
+    chatArea.scrollTop = chatArea.scrollHeight;
+});
 
 
 document.addEventListener('htmx:responseError', evt => {
     const xhr = evt.detail.xhr;
-
-
     const alertContainer = document.getElementById('error-alert-container');
 
     if (alertContainer) {
@@ -69,3 +65,5 @@ function handleKeyDown(event) {
         console.log('Enter key pressed!');
     }
 }
+
+

@@ -31,9 +31,11 @@ extra["springAiVersion"] = "1.0.0-M5"
 dependencies {
 
     implementation("com.vladsch.flexmark:flexmark-html2md-converter:0.64.8")
-
     implementation("io.github.microutils:kotlin-logging:3.0.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")
+
+    implementation("com.mohamedrejeb.ksoup:ksoup-html:0.3.2")
+
 
     implementation("com.linecorp.kotlin-jdsl:jpql-dsl:3.5.4")
     implementation("com.linecorp.kotlin-jdsl:jpql-render:3.5.4")

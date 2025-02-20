@@ -12,6 +12,6 @@ class Message(
 ) : BaseEntity(id = id) {
 
     @Column(nullable = false, length = 100000)
-    val content = content
+    var content = content
 
 }

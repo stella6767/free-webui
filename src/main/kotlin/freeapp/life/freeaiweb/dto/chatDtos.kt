@@ -4,6 +4,8 @@ import AIModelDto
 import freeapp.life.freeaiweb.entity.Chat
 import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
+import org.jsoup.Jsoup
+import org.jsoup.safety.Safelist
 import org.springframework.ai.ollama.api.OllamaOptions
 import java.time.LocalDateTime
 
@@ -50,7 +52,13 @@ data class ChatRespDto(
 
             // 필요한 경우 lazy 로딩된 컬렉션을 명시적으로 초기화하여 MutableList로 변환
             val messagePairs =
-                if (isNeedMsg) chat.messagePairs.toMutableList() else mutableListOf()
+                if (isNeedMsg) {
+                    chat.messagePairs.also { list ->
+                        list.forEach { pair ->
+                            pair.aiMessage?.content = pair.aiMessage?.content?.let { Jsoup.clean(it, Safelist.relaxed()) } ?: ""
+                        }
+                    }.toMutableList()
+                } else mutableListOf()
 
             return ChatRespDto(
                 id = chat.id,
