@@ -4,14 +4,11 @@ import AIModelDto
 import freeapp.life.freeaiweb.dto.ChatModelHolder
 import freeapp.life.freeaiweb.dto.OllamaRequestRto
 import freeapp.life.freeaiweb.dto.OllamaResponseRto
-import freeapp.life.freeaiweb.util.ollamaHost
+
 import mu.KotlinLogging
-import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.ollama.api.OllamaApi
-import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.stereotype.Service
-import java.util.concurrent.ConcurrentHashMap
 
 
 @Service
@@ -29,7 +26,7 @@ class OllamaService(
         val options =
             chatModel.defaultOptions
 
-        val ollamaApi = OllamaApi(ollamaHost)
+        val ollamaApi = OllamaApi(chatModelHolder.ollamaHost)
 
         val models = ollamaApi.listModels().models.map {
             AIModelDto(
@@ -41,7 +38,7 @@ class OllamaService(
         }
 
         return OllamaResponseRto(
-            host = ollamaHost,
+            host = chatModelHolder.ollamaHost,
             models,
             currentModel = options.model ?: "",
             temperature = options.temperature ?: 0.0,
@@ -54,14 +51,15 @@ class OllamaService(
     fun updateChatClient(requestRto: OllamaRequestRto) {
 
         val ollamaApi = OllamaApi(requestRto.host)
-        ollamaHost = requestRto.host
 
         val newChatModel = OllamaChatModel.builder()
             .ollamaApi(ollamaApi)
             .defaultOptions(requestRto.toOllamaOption())
             .build()
 
-        chatModelHolder.updateChatModel(newChatModel)
+        chatModelHolder.updateChatModel(newChatModel, requestRto.host)
+
+        println(chatModelHolder.ollamaHost)
     }
 
 

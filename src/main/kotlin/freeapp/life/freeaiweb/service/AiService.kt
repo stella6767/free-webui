@@ -4,18 +4,11 @@ import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.AiMessageReqDto
 import freeapp.life.freeaiweb.dto.ChatModelHolder
-import freeapp.life.freeaiweb.dto.ChatReqDto
 import freeapp.life.freeaiweb.entity.Chat
-import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
 import mu.KotlinLogging
-import org.springframework.ai.chat.client.ChatClient
-import org.springframework.ai.chat.model.ChatModel
-import org.springframework.ai.ollama.OllamaChatModel
-import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.client.RestClient
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import java.util.concurrent.ConcurrentHashMap
 

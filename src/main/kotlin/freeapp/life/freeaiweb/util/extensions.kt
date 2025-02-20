@@ -1,9 +1,6 @@
 package freeapp.life.freeaiweb.util
 
-import com.linecorp.kotlinjdsl.querymodel.jpql.select.SelectQuery
-import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderContext
 import com.linecorp.kotlinjdsl.render.jpql.JpqlRendered
-import com.linecorp.kotlinjdsl.render.jpql.JpqlRenderer
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.springframework.data.domain.Pageable

@@ -12,7 +12,8 @@ import org.springframework.http.client.ClientHttpResponse
 import org.springframework.http.client.JdkClientHttpRequestFactory
 import org.springframework.web.client.ResponseErrorHandler
 import org.springframework.web.client.RestClient
-import org.springframework.web.reactive.function.client.*
+import org.springframework.web.reactive.function.client.ExchangeStrategies
+import org.springframework.web.reactive.function.client.WebClient
 import java.net.URI
 import java.time.Duration
 import java.util.concurrent.Executors

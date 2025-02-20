@@ -1,20 +1,13 @@
 package freeapp.life.freeaiweb.config
 
 import freeapp.life.freeaiweb.dto.ChatModelHolder
-import freeapp.life.freeaiweb.util.ollamaHost
-import jakarta.annotation.PostConstruct
 import mu.KotlinLogging
 import org.springframework.ai.autoconfigure.ollama.OllamaConnectionProperties
-import org.springframework.ai.chat.client.ChatClient
-import org.springframework.ai.chat.model.ChatModel
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.context.annotation.Lazy
-import org.springframework.web.client.RestClient
-import java.util.concurrent.ConcurrentHashMap
 
 
 @Configuration
@@ -32,21 +25,17 @@ class OllamaConfig(
 
     @Bean
     fun chatModelHolder(): ChatModelHolder {
-        return ChatModelHolder(chatModel())
+        val holder = ChatModelHolder(chatModel(), ollamaConnectionProperties.baseUrl)
+
+        return holder
     }
 
     fun chatModel(): OllamaChatModel {
 
-        ollamaHost = ollamaConnectionProperties.baseUrl
-        println(ollamaHost)
-        val ollamaApi = OllamaApi(ollamaHost)
+        val ollamaApi = OllamaApi(ollamaConnectionProperties.baseUrl)
         val listModels = ollamaApi.listModels()
         val smallestModel =
             listModels.models.minByOrNull { it.size }
-
-        println("!!!!")
-        println(smallestModel)
-
         defaultOption.model = smallestModel?.model
 
         val chatModel = OllamaChatModel.builder()

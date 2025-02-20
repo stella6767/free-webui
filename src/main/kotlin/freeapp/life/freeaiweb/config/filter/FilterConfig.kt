@@ -1,14 +1,11 @@
 package freeapp.life.freeaiweb.config.filter
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import freeapp.life.freeaiweb.config.filter.CustomServletContextRequestLoggingFilter
-import freeapp.life.freeaiweb.config.filter.MDCLoggingFilter
 import mu.KotlinLogging
 import org.springframework.boot.web.servlet.FilterRegistrationBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.Ordered
-import org.springframework.web.filter.CommonsRequestLoggingFilter
 import org.springframework.web.filter.ServletContextRequestLoggingFilter
 
 

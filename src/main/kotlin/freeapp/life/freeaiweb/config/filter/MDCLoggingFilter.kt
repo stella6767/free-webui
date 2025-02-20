@@ -5,7 +5,6 @@ import jakarta.servlet.Filter
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
-import jakarta.servlet.http.HttpServletResponse
 import mu.KotlinLogging
 import org.slf4j.MDC
 import java.util.*

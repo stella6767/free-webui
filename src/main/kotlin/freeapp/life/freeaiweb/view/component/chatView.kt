@@ -102,6 +102,7 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                     //todo 도커 이미지 굽고 허브에 올리기
                     //todo 로딩 표시 및 인피니트 스크롤 페이징 처리
                     //todo error 공통처리.
+                    //todo chat 이동시 스크롤 맨 아래로 고정
                     //exe 파일 추출
 
                     div("w-1/6 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200") {
@@ -283,10 +284,11 @@ fun DIV.chatFormView() {
 fun HEADER.headerView(chat: ChatRespDto?) {
     id = "header"
     classes = setOf("bg-gray-800", "py-4", "px-8", "flex", "items-center", "transition-all", "duration-300", "ml-64")
-
     drawerToggleBtnView()
     val chatName = chat?.name ?: ""
-
+    div {
+        id = "error-alert-container"
+    }
     div {
         classes = setOf("flex", "items-center", "w-full")
         titleChatView(chatName)
@@ -342,7 +344,8 @@ fun DIV.aiSettingModalView() {
     div {
         id = "default-modal"
         attributes["tabindex"] = "-1"
-        attributes["aria-hidden"] = "true"
+        attributes["inert"]
+        //attributes["aria-hidden"] = "true"
         classes = setOf("hidden", "overflow-y-auto", "overflow-x-hidden", "fixed", "top-0", "right-0", "left-0", "z-50", "justify-center", "items-center", "w-full", "md:inset-0", "h-[calc(100%-1rem)]", "max-h-full")
         div {
             classes = setOf("relative", "p-4", "w-full", "max-w-2xl", "max-h-full")
@@ -380,8 +383,12 @@ fun DIV.aiSettingModalView() {
                 }
 
                 div {
+                    id = "ai-set-container-view"
                     attributes["hx-get"] = "/setting"
-                    attributes["hx-trigger"] = "load"
+                    attributes["hx-trigger"] = "load, click from:#ai-setting-btn"
+                    div {
+
+                    }
                 }
             }
         }
@@ -622,7 +629,7 @@ fun DIV.setModelFormView(setting: OllamaResponseRto) {
 fun DIV.aiSettingView() {
 
     div("ml-auto cursor-pointer hover:bg-[#b4b4b480]") {
-        id = "ai-setting-box"
+        id = "ai-setting-btn"
         attributes["data-modal-target"] = "default-modal"
         attributes["data-modal-toggle"] = "default-modal"
         svg("size-8") {

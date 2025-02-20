@@ -5,15 +5,20 @@ import org.springframework.ai.ollama.OllamaChatModel
 import java.util.concurrent.atomic.AtomicReference
 
 class ChatModelHolder(
-    initialChatModel: ChatModel
+    initialChatModel: ChatModel,
+    host:String,
 ) {
+
+    var ollamaHost: String = host
+
     private val chatModelRef =
         AtomicReference(initialChatModel)
 
     fun getChatModel(): ChatModel = chatModelRef.get()
 
-    fun updateChatModel(newChatModel: OllamaChatModel) {
+    fun updateChatModel(newChatModel: OllamaChatModel, host: String) {
         chatModelRef.set(newChatModel)
+        ollamaHost = host
     }
 
 }
