@@ -4,16 +4,20 @@ import AIModelDto
 import freeapp.life.freeaiweb.dto.ChatModelHolder
 import freeapp.life.freeaiweb.dto.OllamaRequestRto
 import freeapp.life.freeaiweb.dto.OllamaResponseRto
+import freeapp.life.freeaiweb.util.isValidURL
 
 import mu.KotlinLogging
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestClient
+import org.springframework.web.client.body
 
 
 @Service
 class OllamaService(
     private val chatModelHolder: ChatModelHolder,
+    private val restClient: RestClient,
 ) {
 
     private val log = KotlinLogging.logger { }
@@ -50,6 +54,18 @@ class OllamaService(
 
     fun updateChatClient(requestRto: OllamaRequestRto) {
 
+        if (!requestRto.host.isValidURL()){
+            throw IllegalArgumentException("Invalid URL")
+        }
+
+        try {
+            val body =
+                restClient.get().uri(requestRto.host + "api/version").retrieve().body<String>()!!
+            println(body)
+        } catch (e:Exception){
+            throw IllegalArgumentException("The Ollama host is not reachable")
+        }
+
         val ollamaApi = OllamaApi(requestRto.host)
 
         val newChatModel = OllamaChatModel.builder()
@@ -58,6 +74,9 @@ class OllamaService(
             .build()
 
         chatModelHolder.updateChatModel(newChatModel, requestRto.host)
+
+
+
 
         println(chatModelHolder.ollamaHost)
     }

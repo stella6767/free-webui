@@ -4,8 +4,24 @@ import com.linecorp.kotlinjdsl.render.jpql.JpqlRendered
 import jakarta.persistence.EntityManager
 import jakarta.persistence.NoResultException
 import org.springframework.data.domain.Pageable
+import java.net.MalformedURLException
+import java.net.URI
+import java.net.URISyntaxException
+import java.net.URL
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+
+
+
+fun String.isValidURL(): Boolean {
+    try {
+        URI(this).toURL()
+        return true
+    }catch (e:Exception){
+        return false
+    }
+}
+
 
 fun <T : Any> EntityManager.getSingleResultOrNull(
     render: JpqlRendered,
@@ -41,7 +57,6 @@ inline fun <reified T : Any> EntityManager.getResult(
 }
 
 
-
 inline fun <T : Any> EntityManager.getCountByQuery(
     render: JpqlRendered,
     type: Class<T>,
@@ -74,7 +89,6 @@ inline fun <reified T : Any> EntityManager.getResultWithPagination(
 
     return fetch.resultList
 }
-
 
 
 fun LocalDateTime.toString(pattern: String): String {

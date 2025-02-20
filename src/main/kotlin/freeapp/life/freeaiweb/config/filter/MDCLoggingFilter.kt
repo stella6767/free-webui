@@ -19,7 +19,6 @@ class MDCLoggingFilter(
         //log.debug { "MDC가 제일 먼저 실행됨 " }
         val uuid = UUID.randomUUID()
         MDC.put("request_id", uuid.toString())
-
         response.characterEncoding = Charsets.UTF_8.name()
         chain.doFilter(request, response)
         MDC.clear()

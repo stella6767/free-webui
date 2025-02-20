@@ -10,16 +10,15 @@ document.addEventListener('htmx:responseError', evt => {
     const xhr = evt.detail.xhr;
 
 
-
     const alertContainer = document.getElementById('error-alert-container');
 
-    if (alertContainer){
+    if (alertContainer) {
 
         console.log("!!!")
         console.error(xhr.responseText);
         const alert =
             document.createElement('div');
-        alert.className = "fixed top-3 z-50 flex justify-center transition-opacity duration-1000";
+        alert.className = "fixed top-3 left-6 right-6 z-50 flex justify-center transition-opacity duration-1000";
         alert.innerHTML = xhr.responseText;
 
         alertContainer.appendChild(alert);
@@ -42,8 +41,16 @@ function menualInitFlowbite() {
 
 //htmx.logAll();
 
+function closeModal() {
+    //getInstances 가 아닌 단수형
+    let modal = window.FlowbiteInstances.getInstance('Modal', 'default-modal');
+    console.log("modal", modal);
+    modal.hide();
+}
+
+
 htmx.defineExtension('debug', {
-    onEvent: function(name, evt) {
+    onEvent: function (name, evt) {
         if (console.debug) {
             console.debug(name, evt)
         } else if (console) {

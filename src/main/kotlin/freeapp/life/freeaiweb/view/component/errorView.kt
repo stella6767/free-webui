@@ -8,7 +8,7 @@ import kotlinx.html.stream.createHTML
 fun errorAlertView(
    msg:String
 ): String {
-    return createHTML().div("flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400")  {
+    return createHTML().div("flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 bg-opacity-75 dark:bg-gray-800 dark:text-red-400")  {
             role = "alert"
             svg("shrink-0 inline w-4 h-4 me-3") {
                 attributes["aria-hidden"] = "true"
@@ -21,7 +21,6 @@ fun errorAlertView(
             }
             span("sr-only") { +"""Info""" }
             div {
-                span("font-medium") { +"""Danger alert! """ }
                 +msg
             }
     }

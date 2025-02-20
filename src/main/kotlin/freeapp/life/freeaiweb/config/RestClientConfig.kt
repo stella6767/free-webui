@@ -26,15 +26,13 @@ class RestClientConfig(
 
     private val log = KotlinLogging.logger {  }
 
-    private val ollamaUrl = "http://localhost:11434"
     @Bean
-    fun ollamaClient(): RestClient {
+    fun restClient(): RestClient {
 
         val requestFactory = getRequestFactory()
 
         return RestClient
             .builder()
-            .baseUrl(ollamaUrl)
             .requestFactory(requestFactory)
             //.defaultStatusHandler(RestClientErrorHandler())
             .requestInterceptor(RestTemplateLoggingInterceptor())
