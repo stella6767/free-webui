@@ -22,8 +22,8 @@ If you have Ollama installed, and can run a model, you can run this self-hosted 
 
 ## Features 🌟
 
-- **Browser-Native AI**: Experience cutting-edge language models running natively within your web browser, eliminating the need for server-side processing or cloud dependencies.
-- **Ganranteed Privacy**: With the AI model running locally on your hardware and all data processing happening within your browser, your data and conversations never leave your computer, ensuring your privacy.
+- **Browser-Native AI**: Experience cutting-edge language models running natively within your web browser, eliminating the need for cloud dependencies.
+- **Ganranteed Privacy**: With the AI model running locally on your hardware and all data processing happening within your own pc(server), your data and conversations never leave your computer, ensuring your privacy.
 - **Offline Accessibility**: Run entirely offline after the initial setup and download, allowing you to engage with AI-powered conversations without an active internet connection.
 - **Server Sent Events (SSE)**: Real-time streaming made easy to LLM interactions.
 - **Open Source and Customizable**: Build and customize your own AI-powered applications with my project.
