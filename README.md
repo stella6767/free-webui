@@ -1,5 +1,6 @@
 # Free-webUI
 
+[introduction.mov](https://github.com/stella6767/free-webui/introduction.mov)
 
 ## Introduction
 
@@ -28,8 +29,18 @@ If you have Ollama installed, and can run a model, you can run this self-hosted 
 
 ## Quickstart 🏁
 
-### via jdk
+### via JDK
 
-download release 
+move to release page -> download jar file -> execute terminal command in your local server 
+```angular2html
+java -jar ${file path}.jar
+```
+Check the http://localhost:8080 port in your browser!
 
 
+
+## Contributing 🤝
+
+If you have any suggestions to improve this project, please fork the repo and create a pull request. 
+You can also simply open an issue. It's a simple project I made by myself, but I'd love to see it grow into open source. 
+Oh, and don't forget to give it a star.
