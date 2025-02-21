@@ -40,6 +40,17 @@ java -jar ${file path}.jar
 Check the http://localhost:8080 port in your browser!
 
 
+### via Docker
+
+If you have Ollama on your computer, use the following commands
+
+```angular2html
+ docker pull stella6767/freewebui:0.0.1
+ //or using DockerFile
+
+ docker run -d -p 8080:8080 --add-host host.docker.internal:host-gateway ${imageName:tag}
+```
+It may take some time after the server loads before you can communicate with ollama.
 
 ## Contributing 🤝
 
