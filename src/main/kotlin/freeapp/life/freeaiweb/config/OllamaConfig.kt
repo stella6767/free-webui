@@ -33,6 +33,7 @@ class OllamaConfig(
     fun chatModel(): OllamaChatModel {
 
         val ollamaApi = OllamaApi(ollamaConnectionProperties.baseUrl)
+
         val listModels = ollamaApi.listModels()
         val smallestModel =
             listModels.models.minByOrNull { it.size }

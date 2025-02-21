@@ -1,17 +1,9 @@
 <configuration scan="true" scanPeriod="60 seconds">
 
 
-    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter" />
-    <property name="LOG_PATTERN" value="[%X{request_id:-startup}] [%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %clr(${LOG_LEVEL_PATTERN:-%5p}) %logger{35} %cyan(%logger{15}) %green(%M) %n %msg %n "/>
-
-    <springProfile name="local">
-        <property name="LOGS_PATH" value="./logs"/>
-        <property name="ERR_LOG_FILE_NAME" value="error"/>
-    </springProfile>
-
-    <springProfile name="prod">
-        <property name="LOGS_PATH" value="/logs"/>
-    </springProfile>
+    <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
+    <property name="LOG_PATTERN"
+              value="[%X{request_id:-startup}] [%d{yyyy-MM-dd HH:mm:ss}:%-3relative][%thread] %clr(${LOG_LEVEL_PATTERN:-%5p}) %logger{35} %cyan(%logger{15}) %green(%M) %n %msg %n "/>
 
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -22,45 +14,14 @@
     </appender>
 
 
-    <!-- 파일에 로그 처리 -->
-    <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOGS_PATH}/logback.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>UTF-8</charset>
-        </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- .gz,.zip 등을 넣으면 자동 일자별 로그파일 압축 -->
-            <fileNamePattern>${LOGS_PATH}/logback.%d{yyyy-MM-dd}.%i.log.gz</fileNamePattern>
-            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
-                <!-- 파일당 최고 용량 -->
-                <maxFileSize>5MB</maxFileSize>
-                <!-- kb, mb, gb -->
-            </timeBasedFileNamingAndTriggeringPolicy>
-            <!-- 일자별 로그파일 최대 보관주기(~일), 해당 설정일 이상된 파일은 자동으로 제거-->
-            <maxHistory>1</maxHistory>
-        </rollingPolicy>
-    </appender>
-
-
-    <root level="info">
-        <springProfile name="local | prod">
-            <appender-ref ref="STDOUT"/>
-            <!--            <appender-ref ref="FILE"/>-->
-        </springProfile>
-        <springProfile name="prod">
-<!--            <appender-ref ref="FILE"/>-->
-        </springProfile>
+    <root level="debug">
+        <appender-ref ref="STDOUT"/>
     </root>
 
 
-    <logger name="com.stella.free" level="debug" additivity="false">
+    <logger name="freeapp.life.freeaiweb" level="debug" additivity="false">
         <appender-ref ref="STDOUT"/>
-<!--        <springProfile name="prod">-->
-<!--            <appender-ref ref="FILE"/>-->
-<!--        </springProfile>-->
     </logger>
-
 
 
 </configuration>

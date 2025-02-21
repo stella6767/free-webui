@@ -43,11 +43,7 @@ spring:
   ai:
     ollama:
       base-url: http://localhost:11434/
-      chat:
-        options:
-          top-k:
-#      chat:
-#        model: qwen2:0.5b
+
 
   threads:
     virtual:
@@ -84,11 +80,14 @@ server:
   config:
     activate:
       on-profile:
-        - prod
+        - docker
 
 spring:
 
   config:
     activate:
       on-profile:
-        - prod
+        - docker
+  ai:
+    ollama:
+      base-url: http://host.docker.internal:11434/

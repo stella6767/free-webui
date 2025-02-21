@@ -67,16 +67,12 @@ class OllamaService(
         }
 
         val ollamaApi = OllamaApi(requestRto.host)
-
         val newChatModel = OllamaChatModel.builder()
             .ollamaApi(ollamaApi)
             .defaultOptions(requestRto.toOllamaOption())
             .build()
 
         chatModelHolder.updateChatModel(newChatModel, requestRto.host)
-
-
-
 
         println(chatModelHolder.ollamaHost)
     }
