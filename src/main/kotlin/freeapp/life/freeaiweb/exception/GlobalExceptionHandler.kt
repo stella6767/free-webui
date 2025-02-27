@@ -1,6 +1,8 @@
 package freeapp.life.freeaiweb.exception
 
-import freeapp.life.freeaiweb.view.component.errorAlertView
+import gg.jte.TemplateEngine
+import gg.jte.TemplateOutput
+import gg.jte.output.StringOutput
 import mu.KotlinLogging
 import org.springframework.core.annotation.AnnotationUtils
 import org.springframework.http.HttpStatus
@@ -13,7 +15,7 @@ import org.springframework.web.server.ResponseStatusException
 
 @RestControllerAdvice
 class GlobalExceptionHandler(
-
+    private val templateEngine: TemplateEngine,
 ) {
 
     private val log = KotlinLogging.logger {  }
@@ -35,7 +37,10 @@ class GlobalExceptionHandler(
             if (ex is ResponseStatusException) { ex.statusCode } else {
             AnnotationUtils.findAnnotation(ex.javaClass, ResponseStatus::class.java)?.value ?: HttpStatus.BAD_REQUEST
         }
-        return ResponseEntity(errorAlertView(ex.localizedMessage), status)
+
+        val output: TemplateOutput = StringOutput()
+        templateEngine.render("component/errorAlert.jte", mapOf("msg" to ex.message), output)
+        return ResponseEntity(output.toString(), status)
     }
 
 

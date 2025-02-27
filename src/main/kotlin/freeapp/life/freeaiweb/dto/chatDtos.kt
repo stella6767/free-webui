@@ -1,6 +1,6 @@
 package freeapp.life.freeaiweb.dto
 
-import AIModelDto
+
 import freeapp.life.freeaiweb.entity.Chat
 import freeapp.life.freeaiweb.entity.Message
 import freeapp.life.freeaiweb.entity.MessagePair
@@ -119,4 +119,13 @@ data class OllamaResponseRto(
     val topK: Int,
     val topP:Double,
 )
+
+data class AIModelDto(
+    val digest: String,
+    val model: String,
+    val name: String,
+    val size: Long
+)
+
+
 

@@ -16,7 +16,7 @@
     <meta content="Kotlin,htmx" name="keywords">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
 </head>
-<body xmlns:hx-on="http://www.w3.org/1999/xhtml" class="bg-gray-900 text-gray-200 font-sans" id="content-body">
+<body class="bg-gray-900 text-gray-200 font-sans" id="content-body">
 
 ${content}
 

@@ -63,7 +63,6 @@ gg:
     templateSuffix: .jte
     developmentMode: true
 
-
 ---
 
 server:
@@ -98,3 +97,7 @@ spring:
   ai:
     ollama:
       base-url: http://host.docker.internal:11434/
+gg:
+  jte:
+    usePrecompiledTemplates: true
+    developmentMode: false

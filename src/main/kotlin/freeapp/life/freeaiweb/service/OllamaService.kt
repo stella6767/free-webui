@@ -1,6 +1,7 @@
 package freeapp.life.freeaiweb.service
 
-import AIModelDto
+
+import freeapp.life.freeaiweb.dto.AIModelDto
 import freeapp.life.freeaiweb.dto.ChatModelHolder
 import freeapp.life.freeaiweb.dto.OllamaRequestRto
 import freeapp.life.freeaiweb.dto.OllamaResponseRto

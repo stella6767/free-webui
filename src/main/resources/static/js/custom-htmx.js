@@ -21,6 +21,8 @@ document.addEventListener('htmx:responseError', evt => {
 
         alertContainer.appendChild(alert);
 
+        //alertContainer.
+
         setTimeout(() => {
             alert.classList.add('opacity-0');
             // fade-out 애니메이션 지속시간(예: 1초) 후 요소 제거

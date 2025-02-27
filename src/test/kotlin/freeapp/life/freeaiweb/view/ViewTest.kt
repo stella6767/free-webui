@@ -3,8 +3,9 @@ package freeapp.life.freeaiweb.view
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.ChatRespDto
-import freeapp.life.freeaiweb.entity.MessagePair
+import freeapp.life.freeaiweb.dto.OllamaResponseRto
 import freeapp.life.freeaiweb.view.component.chatNameBoxView
+import freeapp.life.freeaiweb.view.component.setModelFormView
 import freeapp.life.freeaiweb.view.component.titleChatView
 import gg.jte.ContentType
 import gg.jte.TemplateEngine
@@ -19,7 +20,6 @@ import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
-import java.io.StringWriter
 import java.time.LocalDateTime
 import kotlin.io.path.Path
 import kotlin.test.Test
@@ -57,9 +57,12 @@ class ViewTest {
 
         val html = renderComponentWithoutWrap {
             //chatsNavView(page, chat)
-            msgPairBlockView(
-                Instancio.create(MessagePair::class.java),
-            )
+//            msgPairBlockView(
+//                Instancio.create(MessagePair::class.java),
+//            )
+
+            setModelFormView(Instancio.create(OllamaResponseRto::class.java),)
+
         }
 
         //Page.empty()
@@ -69,7 +72,7 @@ class ViewTest {
 
         println(html)
         //println(chatRenameView(0, ""))
-
+        //println(errorAlertView("test"))
     }
 
 
