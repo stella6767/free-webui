@@ -40,7 +40,7 @@ inline fun writePage(crossinline block: HTML.() -> Unit): String {
 
 
 
-private fun HTML.defaultHeader() {
+fun HTML.defaultHeader() {
     head {
         script {
             src = "/js/htmx.min.js"
@@ -75,7 +75,6 @@ private fun HTML.defaultHeader() {
         meta(name = "author", content = "stella6767")
         meta(name = "keywords", content = arrayOf("Kotlin", "htmx").joinToString(","))
         meta(name = "viewport", content = "width=device-width, initial-scale=1.0")
-
     }
 }
 

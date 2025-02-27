@@ -4,21 +4,52 @@ import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.ChatRespDto
 import freeapp.life.freeaiweb.view.component.chatNameBoxView
+import freeapp.life.freeaiweb.view.component.chatsNavView
 import freeapp.life.freeaiweb.view.component.titleChatView
 import kotlinx.html.div
-import kotlinx.html.id
-import kotlinx.html.input
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.stream.createHTML
+import org.instancio.Instancio
 import org.springframework.ai.ollama.api.OllamaOptions
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import java.time.LocalDateTime
-
 import kotlin.test.Test
+
 
 class ViewTest {
 
     val chat =
         ChatRespDto(1, "", mutableListOf(), LocalDateTime.now())
+
+    val chats: List<ChatRespDto> =
+        Instancio.ofList(ChatRespDto::class.java).size(1).create()
+
+    var pageRequest = PageRequest.of(0, 10)
+
+    var page: Page<ChatRespDto> =
+        PageImpl(chats, pageRequest, chats.size.toLong())
+
+    @Test
+    fun viewTest(){
+
+        val html4 =  renderPageWithLayout { chatView(chat) }
+
+        val html = renderComponentWithoutWrap {
+            chatsNavView(page, chat)
+        }
+
+        //Page.empty()
+        val request =
+            PageRequest.of(0, 10)
+
+
+        println(html)
+        //println(chatRenameView(0, ""))
+
+    }
+
 
 
     @Test

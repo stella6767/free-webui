@@ -69,7 +69,6 @@ class ChatController(
 
         val headers = HttpHeaders()
         headers.add("HX-Push", "/chat/${chatDto.id}")
-        //headers.add("HX-Trigger", "chatsEvent")
         headers.add("HX-Trigger-After-Swap", "newChatEvent")
 
         return ResponseEntity(renderComponent, headers, HttpStatus.OK)

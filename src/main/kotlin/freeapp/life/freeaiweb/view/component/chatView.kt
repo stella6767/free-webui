@@ -122,9 +122,6 @@ fun DIV.chatsNavView(chats: Page<ChatRespDto>, currentChat: ChatRespDto?) {
                     chatNameBoxView(chat)
 
                     //todo delete 시 현재 페이지 url 보고,
-                    //todo readme 작성
-                    //todo 도커 이미지 굽고 허브에 올리기
-                    //exe 파일 추출
 
                     div("w-1/6 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200") {
                         id = "dropdown-btn-${chat.id}"

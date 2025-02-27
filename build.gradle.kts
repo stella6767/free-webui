@@ -32,8 +32,8 @@ dependencies {
 
     implementation("gg.jte:jte:3.1.12")
     implementation("gg.jte:jte-spring-boot-starter-3:3.1.12")
-    compileOnly ("gg.jte:jte-kotlin:3.1.16")
 
+    implementation("io.github.wimdeblauwe:htmx-spring-boot:4.0.1")
 
     implementation("com.vladsch.flexmark:flexmark-html2md-converter:0.64.8")
     implementation("io.github.microutils:kotlin-logging:3.0.4")
@@ -54,6 +54,7 @@ dependencies {
     runtimeOnly("com.h2database:h2")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
+    testImplementation ("org.instancio:instancio-junit:5.4.0")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
