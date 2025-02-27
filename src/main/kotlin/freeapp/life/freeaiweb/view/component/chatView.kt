@@ -39,7 +39,7 @@ fun DIV.drawerView(chat: ChatRespDto?) {
             attributes["hx-vals"] = """js:{"chatId": document.getElementById("chat-id-box").value}"""
             //attributes["hx-on--after-settle"] = "javascript:menualInitFlowbite()"
             attributes["hx-on--after-request"] = "javascript:menualInitFlowbite()"
-
+            //&quot;
             classes = setOf("mt-5")
         }
 

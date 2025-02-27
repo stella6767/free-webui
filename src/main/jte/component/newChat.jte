@@ -5,7 +5,7 @@
             <h1 class="text-2xl font-semibold text-white mb-6">What can I help with?</h1>
             <div class="flex items-stretch justify-center" hx-include="#client-id, #chat-input-area"
                  hx-post="/chat" hx-target="#main-container"
-                 hx-trigger="keydown[!shiftKey &amp;&amp; key=='Enter'] from:#chat-input-area, click from:#chat-init-btn"
+                 hx-trigger="keydown[!shiftKey && key=='Enter'] from:#chat-input-area, click from:#chat-init-btn"
                  id="new-chat-msg-box">
                         <textarea
                                 class="bg-gray-700 w-96 p-3 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"

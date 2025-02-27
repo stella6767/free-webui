@@ -12,7 +12,6 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-
 fun String.isValidURL(): Boolean {
     try {
         URI(this).toURL()

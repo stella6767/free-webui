@@ -58,8 +58,8 @@ class ExampleController(
             ChatRespDto.fromEntity(msgPair.chat, true)
 
         model.addAttribute("chat", chatDto)
-        model.addAttribute("chatId", chatDto.id)
-        model.addAttribute("chatName", chatDto.name)
+        model.addAttribute("id", chatDto.id)
+        model.addAttribute("name", chatDto.name)
 
         htmxResponse.addTriggerAfterSwap("newChatEvent")
         htmxResponse.pushUrl = "/chat/${chatDto.id}"
@@ -68,6 +68,7 @@ class ExampleController(
             .with("component/mainContent")
             .fragment("component/chatIdBox")
             .fragment("component/titleChatBox")
+            .fragment("component/chatNavBox")
             .build()
     }
 
@@ -107,49 +108,60 @@ class ExampleController(
         return chatService.deleteChatById(id)
     }
 
+
+    @HxRequest
     @PostMapping("/message")
-    fun message(chatReqDto: AiMessageReqDto): String {
+    fun message(
+        model: Model,
+        chatReqDto: AiMessageReqDto
+    ): String {
 
         val msgPair =
             aiService.createMessagePair(chatReqDto)
-
-        val userChatView = renderComponent {
-            div {
-                msgPairBlockView(
-                    msgPair,
-                )
-            }
-        }
-        return userChatView
+        model.addAttribute("msg", msgPair)
+        return "component/msgPair"
     }
 
 
     @GetMapping("/chat/{id}")
     fun chat(
+        model: Model,
         @PathVariable id: Long,
         request: HttpServletRequest,
     ): String {
 
         val chat =
             chatService.findChatRespById(id)
-
-        val html = if (request?.getHeader("HX-Request") == null) {
-            renderPageWithLayout {
-                chatView(chat)
-            }
-        } else renderComponent {
-            div {
-                mainContentView(chat)
-                titleChatView(chat.name)
-            }
-        }
-
-        return html
+        model.addAttribute("chat", chat)
+        return "page/gpt"
     }
 
 
+    @HxRequest
+    @GetMapping("/chat/{id}")
+    fun chatWithHtmx(
+        model: Model,
+        @PathVariable id: Long,
+        request: HttpServletRequest,
+    ): FragmentsRendering {
+
+        val chat =
+            chatService.findChatRespById(id)
+
+        model.addAllAttributes(mapOf("chat" to chat, "name" to chat.name))
+
+        return  FragmentsRendering
+            .with("component/mainContent")
+            .fragment("component/titleChatBox")
+            .build()
+    }
+
+
+
+    @HxRequest
     @GetMapping("/chats")
     fun chats(
+        model: Model,
         @PageableDefault(size = 20) pageable: Pageable,
         @RequestParam chatId: Long = 0,
     ): String {
@@ -157,15 +169,9 @@ class ExampleController(
         val chat = if (chatId != 0L) {
             ChatRespDto.fromEntity(chatService.findChatById(chatId), false)
         } else null
-
         val chatsByPage = chatService.findChatsByPage(pageable)
-
-        return renderComponentWithoutWrap {
-            chatsNavView(
-                chatsByPage,
-                chat
-            )
-        }
+        model.addAllAttributes(mapOf("currentChat" to chat, "chats" to chatsByPage))
+        return "component/chatsNav"
     }
 
 

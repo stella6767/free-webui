@@ -3,9 +3,14 @@ package freeapp.life.freeaiweb.view
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.ChatRespDto
+import freeapp.life.freeaiweb.entity.MessagePair
 import freeapp.life.freeaiweb.view.component.chatNameBoxView
-import freeapp.life.freeaiweb.view.component.chatsNavView
 import freeapp.life.freeaiweb.view.component.titleChatView
+import gg.jte.ContentType
+import gg.jte.TemplateEngine
+import gg.jte.TemplateOutput
+import gg.jte.output.StringOutput
+import gg.jte.resolve.DirectoryCodeResolver
 import kotlinx.html.div
 import kotlinx.html.stream.appendHTML
 import kotlinx.html.stream.createHTML
@@ -14,7 +19,9 @@ import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
+import java.io.StringWriter
 import java.time.LocalDateTime
+import kotlin.io.path.Path
 import kotlin.test.Test
 
 
@@ -31,13 +38,28 @@ class ViewTest {
     var page: Page<ChatRespDto> =
         PageImpl(chats, pageRequest, chats.size.toLong())
 
+
+    @Test
+    fun jteViewTest(){
+        val templateEngine = TemplateEngine.create(
+            DirectoryCodeResolver(Path("src/main/jte/")),
+            ContentType.Html
+        )
+        val output: TemplateOutput = StringOutput()
+        templateEngine.render("page/test.jte", mapOf(), output)
+        println(output.toString())
+    }
+
     @Test
     fun viewTest(){
 
         val html4 =  renderPageWithLayout { chatView(chat) }
 
         val html = renderComponentWithoutWrap {
-            chatsNavView(page, chat)
+            //chatsNavView(page, chat)
+            msgPairBlockView(
+                Instancio.create(MessagePair::class.java),
+            )
         }
 
         //Page.empty()

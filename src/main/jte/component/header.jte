@@ -1,13 +1,13 @@
 @import freeapp.life.freeaiweb.dto.ChatRespDto
-@import org.springframework.data.domain.Page
 
-@param ChatRespDto chat
+
+@param ChatRespDto chat = null
 
 
 <header class="bg-gray-800 py-4 px-8 flex items-center transition-all duration-300 ml-64" id="header">
     <div class="hover:bg-[#b4b4b4] w-10 h-10 flex items-center justify-center rounded cursor-pointer" hx-on:click="htmx.toggleClass('#drawer', '-translate-x-full');
-htmx.toggleClass('#header', 'ml-64');
-htmx.toggleClass('#main-container', 'ml-64')                    ">
+            htmx.toggleClass('#header', 'ml-64');
+            htmx.toggleClass('#main-container', 'ml-64') ">
         <svg aria-hidden="true" class="w-6 h-6 text-gray-800 dark:text-white" fill="currentColor" id="toggleDrawer"
              viewbox="0 0 17 14" xmlns="http://www.w3.org/2000/svg">
             <path d="M16 2H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 1 1 0 2Zm0 6H1a1 1 0 0 1 0-2h15a1 1 0 0 1 0 2Z"></path>
@@ -15,8 +15,7 @@ htmx.toggleClass('#main-container', 'ml-64')                    ">
     </div>
     <div id="error-alert-container"></div>
     <div class="flex items-center w-full">
-
-        @template.component.titleChatBox(name = chat.getName())
+        @template.component.titleChatBox(name = chat == null ? "" : chat.getName())
         @template.component.settingModalBtn()
     </div>
     <div>
@@ -36,13 +35,7 @@ htmx.toggleClass('#main-container', 'ml-64')                    ">
                 </div>
                 New chat
             </div>
-            <div class="mt-5" hx-get="/chats" hx-on--after-request="javascript:menualInitFlowbite()"
-                 hx-swap="innerHTML" hx-target="#chat-nav-list" hx-trigger="load, newChatEvent from:body"
-                 hx-vals="js:{&quot;chatId&quot;: document.getElementById(&quot;chat-id-box&quot;).value}"
-                 id="chat-nav-box">
-                !{ Page<ChatRespDto> emptyPage = Page.empty();}
-                @template.component.chatsNav(currentChat = chat, chats = emptyPage)
-            </div>
+            @template.component.chatNavBox(chat = chat)
             <div class="max-h-[80vh] overflow-y-auto" id="chat-nav-list">
                 <nav class="mt-2">
                     <ul class="space-y-2"></ul>
@@ -59,7 +52,7 @@ htmx.toggleClass('#main-container', 'ml-64')                    ">
             </div>
         </aside>
     </div>
-    @template.component.chatIdBox()
+    @template.component.chatIdBox(id = chat == null ? 0 : chat.getId())
     @template.component.sseConnectDiv()
     @template.component.aiSettingModal()
 </header>

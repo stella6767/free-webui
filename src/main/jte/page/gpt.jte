@@ -1,7 +1,12 @@
+@import freeapp.life.freeaiweb.dto.ChatRespDto
+
+@param ChatRespDto chat
+
+
 @template.layout.main(content = @`
-    @template.component.header()
+    @template.component.header(chat = chat)
     <div class="ml-64" id="main-container">
-        @template.component.mainContent()
+        @template.component.mainContent(chat = chat)
     </div>
 
 `)

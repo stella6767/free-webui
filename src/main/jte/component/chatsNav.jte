@@ -1,16 +1,17 @@
 @import freeapp.life.freeaiweb.dto.ChatRespDto
 @import org.springframework.data.domain.Page
-
+@import java.util.function.Function
+@import gg.jte.Content
 
 @param  ChatRespDto currentChat
 @param Page<ChatRespDto> chats
 
 
-<nav class="mt-2">
+!{Function<Page<ChatRespDto>,Content> component = (chatList) -> @`
     <ul class="space-y-2">
-        @for(ChatRespDto chat : chats)
+        @for(ChatRespDto chat : chatList.getContent())
 
-            !{var selectedColor = chat.getId() == currentChat.getId() ? "bg-[#b4b4b480]" : "";}
+            !{var selectedColor = (currentChat != null && chat.getId() == currentChat.getId()) ? "bg-[#b4b4b480]" : "";}
 
             <div class="flex truncate group cursor-pointer tab-active hover:bg-[#b4b4b480] ${selectedColor}"
                  id="chat-li-${chat.getId()}"
@@ -22,11 +23,7 @@
                           });
                         }
                         let newTab = event.currentTarget
-                        newTab.classList.add('bg-[#b4b4b480]')                            ">
-                <div class="w-5/6 text-gray-300 hover:text-white" id="chat-name-div-${chat.getId()}" hx-trigger="click"
-                     hx-get="/chat/3957" hx-target="#main-container" hx-swap="innerHTML scroll:#chatArea:bottom"
-                     hx-push-url="true">${chat.getName()}
-                </div>
+                        newTab.classList.add('bg-[#b4b4b480]') ">
                 @template.component.chatNameBox(chat = chat)
 
                 <div class="w-1/6 cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity duration-200"
@@ -40,13 +37,16 @@
                 </div>
                 <div class="z-50 hidden bg-white divide-y divide-gray-100 rounded-lg shadow-sm w-44 dark:bg-gray-700"
                      id="dropdown-${chat.getId()}">
-                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-btn-${chat.getId()}">
-                        <li hx-get="/chat/rename/${chat.getId()}" hx-trigger="click" hx-target="#chat-name-div-${chat.getId()}"
+                    <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
+                        aria-labelledby="dropdown-btn-${chat.getId()}">
+                        <li hx-get="/chat/rename/${chat.getId()}" hx-trigger="click"
+                            hx-target="#chat-name-div-${chat.getId()}"
                             hx-swap="outerHTML" hx-ext="debug"
-                            hx-vals="js:{&quot;name&quot;: document.getElementById(&quot;chat-name-div-3957&quot;).textContent}">
+                            hx-vals='{"name": "${chat.getName()}" } '>
                             <span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Rename</span>
                         </li>
-                        <li hx-delete="/chat/${chat.getId()}" hx-confirm="Are you sure you wish to delete?" hx-trigger="click"
+                        <li hx-delete="/chat/${chat.getId()}" hx-confirm="Are you sure you wish to delete?"
+                            hx-trigger="click"
                             hx-target="#chat-li-${chat.getId()}" hx-swap="delete"><span
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</span>
                         </li>
@@ -55,4 +55,25 @@
             </div>
         @endfor
     </ul>
-</nav>
+`;}
+
+
+
+@if (!chats.isLast())
+    <nav class="mt-2"
+         hx-get="/chats?page=${chats.getPageable().getPageNumber() + 1}"
+         hx-trigger="revealed"
+         hx-on--after-request="javascript:menualInitFlowbite()"
+         hx-swap="afterend">
+        ${component.apply(chats)}
+    </nav>
+@else
+    <nav class="mt-2">
+        ${component.apply(chats)}
+    </nav>
+@endif
+
+
+
+
+
