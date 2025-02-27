@@ -30,6 +30,11 @@ extra["springAiVersion"] = "1.0.0-M5"
 
 dependencies {
 
+    implementation("gg.jte:jte:3.1.12")
+    implementation("gg.jte:jte-spring-boot-starter-3:3.1.12")
+    compileOnly ("gg.jte:jte-kotlin:3.1.16")
+
+
     implementation("com.vladsch.flexmark:flexmark-html2md-converter:0.64.8")
     implementation("io.github.microutils:kotlin-logging:3.0.4")
     implementation("org.jetbrains.kotlinx:kotlinx-html:0.12.0")

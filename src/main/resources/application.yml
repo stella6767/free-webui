@@ -6,6 +6,7 @@ server:
       charset: utf-8
       enabled: true
 
+
 spring:
 
   jpa:
@@ -56,6 +57,12 @@ spring:
 
 logging:
   config: classpath:logback-free.xml
+gg:
+  jte:
+    templateLocation: src/main/jte
+    templateSuffix: .jte
+    developmentMode: true
+
 
 ---
 
