@@ -14,7 +14,7 @@ If you have Ollama installed, and can run a model, you can run this self-hosted 
 - `Kotlin with SpringBoot Framework`: for Secure and reliable server
 - `spring-data-jpa`: Simplifies the development of creating a JPA-based data access layer
 - [`kotlin-jdsl`](https://github.com/line/kotlin-jdsl): Kotlin library that makes it easy to build and execute queries without generated metamodel
-- [`Kotlinx html`](https://github.com/Kotlin/kotlinx.html): Kotlin DSL for HTML
+- [`JTE`](https://github.com/casid/jte): Secure and speedy templates for Java and Kotlin.
 - [`HTMX`](https://github.com/bigskysoftware/htmx): No hefty JavaScript frameworks needed—HTMX keeps interactions snappy with simple HTML attributes
 - `File-based h2 database`: A lightweight yet powerful database for all your data persistence needs
 - [`tailwindcss`](https://github.com/tailwindlabs/tailwindcss): A utility-first CSS framework for rapid UI development.
