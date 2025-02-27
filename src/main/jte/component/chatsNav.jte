@@ -47,7 +47,9 @@
                         </li>
                         <li hx-delete="/chat/${chat.getId()}" hx-confirm="Are you sure you wish to delete?"
                             hx-trigger="click"
-                            hx-target="#chat-li-${chat.getId()}" hx-swap="delete"><span
+                            hx-target="#chat-li-${chat.getId()}"
+                            hx-swap="delete"
+                        ><span
                                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</span>
                         </li>
                     </ul>

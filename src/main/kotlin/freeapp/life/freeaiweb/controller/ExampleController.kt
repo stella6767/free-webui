@@ -64,14 +64,13 @@ class ExampleController(
         htmxResponse.addTriggerAfterSwap("newChatEvent")
         htmxResponse.pushUrl = "/chat/${chatDto.id}"
 
-        return  FragmentsRendering
+        return FragmentsRendering
             .with("component/mainContent")
             .fragment("component/chatIdBox")
             .fragment("component/titleChatBox")
             .fragment("component/chatNavBox")
             .build()
     }
-
 
 
     @HxRequest
@@ -83,7 +82,7 @@ class ExampleController(
     ): String {
         val chat =
             chatService.updateChat(id, chatReqDto)
-        model.addAttribute(chat)
+        model.addAttribute("chat", chat)
         return "component/chatNameBox"
     }
 
@@ -99,9 +98,9 @@ class ExampleController(
         return "component/chatRenameDiv"
     }
 
-
-
+    @HxRequest
     @DeleteMapping("/chat/{id}")
+    @ResponseBody
     fun deleteChat(
         @PathVariable id: Long
     ) {
@@ -150,12 +149,11 @@ class ExampleController(
 
         model.addAllAttributes(mapOf("chat" to chat, "name" to chat.name))
 
-        return  FragmentsRendering
+        return FragmentsRendering
             .with("component/mainContent")
             .fragment("component/titleChatBox")
             .build()
     }
-
 
 
     @HxRequest

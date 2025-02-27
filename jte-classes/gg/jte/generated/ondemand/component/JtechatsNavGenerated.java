@@ -5,7 +5,7 @@ import java.util.function.Function;
 import gg.jte.Content;
 public final class JtechatsNavGenerated {
 	public static final String JTE_NAME = "component/chatsNav.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,1,2,3,5,5,5,9,9,9,9,11,11,13,13,15,15,15,15,16,16,16,16,26,26,29,29,29,29,29,29,29,29,38,38,38,38,40,40,40,40,41,41,41,41,42,42,42,42,44,44,44,44,47,47,47,47,49,49,49,49,55,55,57,57,57,61,61,63,63,63,63,67,67,67,69,69,71,71,71,73,73,79,79,79,5,6,6,6,6};
+	public static final int[] JTE_LINE_INFO = {0,0,1,2,3,5,5,5,9,9,9,9,11,11,13,13,15,15,15,15,16,16,16,16,26,26,29,29,29,29,29,29,29,29,38,38,38,38,40,40,40,40,41,41,41,41,42,42,42,42,44,44,44,44,47,47,47,47,49,49,49,49,57,57,59,59,59,63,63,65,65,65,65,69,69,69,71,71,73,73,73,75,75,81,81,81,5,6,6,6,6};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, ChatRespDto currentChat, Page<ChatRespDto> chats) {
 		jteOutput.writeContent("\n\n");
 		Function<Page<ChatRespDto>,Content> component = (chatList) -> new gg.jte.html.HtmlContent() {
@@ -60,7 +60,7 @@ public final class JtechatsNavGenerated {
 					jteOutput.setContext("li", "hx-target");
 					jteOutput.writeUserContent(chat.getId());
 					jteOutput.setContext("li", null);
-					jteOutput.writeContent("\" hx-swap=\"delete\"><span\n                                    class=\"block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white\">Delete</span>\n                        </li>\n                    </ul>\n                </div>\n            </div>\n        ");
+					jteOutput.writeContent("\"\n                            hx-swap=\"delete\"\n                        ><span\n                                    class=\"block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white\">Delete</span>\n                        </li>\n                    </ul>\n                </div>\n            </div>\n        ");
 				}
 				jteOutput.writeContent("\n    </ul>\n");
 			}
