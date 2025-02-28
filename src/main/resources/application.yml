@@ -8,7 +8,6 @@ server:
 
 
 spring:
-
   jpa:
     open-in-view: false
     hibernate:
@@ -54,6 +53,10 @@ spring:
       - local
   application:
     name: free-webui
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 logging:
   config: classpath:logback-free.xml

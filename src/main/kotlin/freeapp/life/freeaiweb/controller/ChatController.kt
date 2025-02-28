@@ -15,9 +15,11 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.View
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
 import org.springframework.web.servlet.view.FragmentsRendering
+import java.time.Duration
 
 
 @Controller
@@ -173,5 +175,16 @@ class ChatController(
     ): SseEmitter {
         return aiService.connectSse(clientId)
     }
+
+    @HxRequest
+    @ResponseBody
+    @PostMapping("/upload")
+    fun uploadFile(@RequestParam("file") file: MultipartFile) {
+
+
+        Thread.sleep(Duration.ofSeconds(3))
+        println(file.originalFilename)
+    }
+
 
 }

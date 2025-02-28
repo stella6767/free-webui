@@ -31,6 +31,8 @@ extra["springAiVersion"] = "1.0.0-M5"
 
 dependencies {
 
+    implementation("org.springframework.ai:spring-ai-tika-document-reader")
+
     implementation("gg.jte:jte:3.1.12")
     implementation("gg.jte:jte-spring-boot-starter-3:3.1.12")
 
