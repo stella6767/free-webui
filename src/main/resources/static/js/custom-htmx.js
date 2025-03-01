@@ -39,6 +39,36 @@ function menualInitFlowbite() {
     initFlowbite();
 }
 
+function fileResponse(){
+    console.log('?');
+    document.getElementById('isRagBox').value = 'true';
+    menualInitFlowbite()
+}
+
+
+function initfileList(){
+    console.log("what?");
+    document.getElementById('chatInput').value = '';
+    document.getElementById('isRagBox').value = 'false';
+    const fileList = document.getElementById('file-list');
+    // file-list의 모든 자식 요소를 순회하면서, id가 'isRagBox'가 아닌 요소들을 제거
+    Array.from(fileList.children).forEach(child => {
+        if (child.id !== 'isRagBox') {
+            fileList.removeChild(child);
+        }
+    });
+
+}
+
+
+// document.body.addEventListener('htmx:beforeSwap', function(evt) {
+//     const oobElements = evt.detail.xhr.responseXML?.querySelectorAll('[hx-swap-oob]');
+//     if (!oobElements || oobElements.length === 0) {
+//         // hx-swap-oob 요소가 없으면 교체 취소
+//         evt.detail.shouldSwap = false;
+//     }
+// });
+
 //htmx.logAll();
 
 function closeModal() {
@@ -60,6 +90,21 @@ htmx.defineExtension('debug', {
         }
     }
 })
+
+
+
+// htmx.defineExtension('prebserve-oob', {
+//     onEvent: function (name, evt) {
+//         if (name === 'beforeSwap') {
+//             const target = evt.detail.target;
+//             if (target.getAttribute('hx-swap-oob') && !evt.detail.xhr.responseXML) {
+//                 console.log("교체 방지");
+//                 evt.detail.shouldSwap = false; // 교체 방지
+//             }
+//         }
+//     }
+// });
+// <div hx-ext="preserve-oob"></div>
 
 
 function handleKeyDown(event) {

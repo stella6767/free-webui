@@ -39,6 +39,7 @@ class ChatController(
         return FragmentsRendering
             .with("component/newChat")
             .fragment("component/titleChatBox")
+
             .build()
     }
 
@@ -109,12 +110,16 @@ class ChatController(
     fun message(
         model: Model,
         chatReqDto: AiMessageReqDto
-    ): String {
+    ): FragmentsRendering {
 
         val msgPair =
             aiService.createMessagePair(chatReqDto)
+
         model.addAttribute("msg", msgPair)
-        return "component/msgPair"
+
+        return FragmentsRendering
+            .with("component/msgPair")
+            .build()
     }
 
 
@@ -177,13 +182,15 @@ class ChatController(
     }
 
     @HxRequest
-    @ResponseBody
     @PostMapping("/upload")
-    fun uploadFile(@RequestParam("file") file: MultipartFile) {
+    fun uploadFile(
+        @RequestParam("file") file: MultipartFile,
+        model: Model
+    ): String {
 
-
-        Thread.sleep(Duration.ofSeconds(3))
-        println(file.originalFilename)
+        val uploadResponseDto = aiService.addFileToVectorStore(file)
+        model.addAttribute("filename", uploadResponseDto.filename)
+        return "component/fileResponseView"
     }
 
 

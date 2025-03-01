@@ -14,6 +14,7 @@ data class AiMessageReqDto(
     val msg: String,
     val clientId: String,
     val chatId: Long = 0,
+    val isRag: Boolean = false,
 ) {
 
     fun toEntity(
@@ -128,4 +129,8 @@ data class AIModelDto(
 )
 
 
-
+data class UploadResponseDto(
+    val filename:String,
+    val fileType:String,
+    val fileSize:Long,
+)

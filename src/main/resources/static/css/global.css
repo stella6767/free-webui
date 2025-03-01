@@ -37,3 +37,21 @@
     100% { opacity: 1; }
 }
 
+
+/* HTMX 요청 진행 중 */
+.htmx-request.spinner-indicator ~ .upload-svg {
+    display: none;
+}
+
+.spinner-indicator {
+    display: none;
+}
+
+.htmx-request .spinner-indicator {
+    display: inline;
+}
+
+.htmx-request.spinner-indicator {
+    display: inline;
+}
+

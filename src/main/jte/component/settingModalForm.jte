@@ -12,9 +12,14 @@
                     id="models" name="model"
                     class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
 
+                <option value="" selected="${(setting.getCurrentModel().isEmpty())}">
+                    Choose a model
+                </option>
+
                 @for(AIModelDto model : setting.getModels())
                     <option value="${model.getModel()}"
-                            selected="${setting.getCurrentModel().equals(model.getModel())}">${model.getModel()}</option>
+                            selected="${setting.getCurrentModel().equals(model.getModel())}">${model.getModel()}
+                    </option>
                 @endfor
 
             </select>

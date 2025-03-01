@@ -3,18 +3,12 @@ package freeapp.life.freeaiweb.view
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.ChatRespDto
-import freeapp.life.freeaiweb.dto.OllamaResponseRto
-import freeapp.life.freeaiweb.view.component.chatNameBoxView
-import freeapp.life.freeaiweb.view.component.setModelFormView
-import freeapp.life.freeaiweb.view.component.titleChatView
+
 import gg.jte.ContentType
 import gg.jte.TemplateEngine
 import gg.jte.TemplateOutput
 import gg.jte.output.StringOutput
 import gg.jte.resolve.DirectoryCodeResolver
-import kotlinx.html.div
-import kotlinx.html.stream.appendHTML
-import kotlinx.html.stream.createHTML
 import org.instancio.Instancio
 import org.springframework.ai.ollama.api.OllamaOptions
 import org.springframework.data.domain.Page
@@ -50,30 +44,6 @@ class ViewTest {
         println(output.toString())
     }
 
-    @Test
-    fun viewTest(){
-
-        val html4 =  renderPageWithLayout { chatView(chat) }
-
-        val html = renderComponentWithoutWrap {
-            //chatsNavView(page, chat)
-//            msgPairBlockView(
-//                Instancio.create(MessagePair::class.java),
-//            )
-
-            setModelFormView(Instancio.create(OllamaResponseRto::class.java),)
-
-        }
-
-        //Page.empty()
-        val request =
-            PageRequest.of(0, 10)
-
-
-        println(html)
-        //println(chatRenameView(0, ""))
-        //println(errorAlertView("test"))
-    }
 
 
 
@@ -88,51 +58,6 @@ class ViewTest {
 
     }
 
-    @Test
-    fun downstreamTest() {
-
-        val renderComponent = renderComponent {
-            div {
-                mainContentView(chat)
-                chatIdHiddenView(1)
-                titleChatView("??")
-            }
-        }
-
-        println(renderComponent)
-
-    }
-
-    @Test
-    fun escapeTest() {
-
-        val name: String = "test"
-
-
-
-        val html = createHTML().div {
-            chatNameBoxView(chat)
-        }
-
-        val html2 = buildString {
-            appendHTML().div { chatNameBoxView(chat) }
-        }
-
-        val html3 = renderComponent {
-            div {
-                chatNameBoxView(chat)
-            }
-        }
-
-        val html4 = renderComponentWithoutWrap {
-            chatNameBoxView(chat)
-        }
-
-        println(html)
-        println(html2)
-        println(html3)
-        println(html4)
-    }
 
 
     @Test

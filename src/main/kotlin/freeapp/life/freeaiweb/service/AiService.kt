@@ -3,20 +3,34 @@ package freeapp.life.freeaiweb.service
 import com.vladsch.flexmark.html.HtmlRenderer
 import com.vladsch.flexmark.parser.Parser
 import freeapp.life.freeaiweb.dto.AiMessageReqDto
-import freeapp.life.freeaiweb.dto.ChatModelHolder
+import freeapp.life.freeaiweb.dto.ChatClientHolder
+import freeapp.life.freeaiweb.dto.UploadResponseDto
 import freeapp.life.freeaiweb.entity.Chat
 import freeapp.life.freeaiweb.entity.MessagePair
 import mu.KotlinLogging
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor
+import org.springframework.ai.document.Document
+import org.springframework.ai.reader.tika.TikaDocumentReader
+import org.springframework.ai.transformer.splitter.TokenTextSplitter
+import org.springframework.ai.vectorstore.SearchRequest
+import org.springframework.ai.vectorstore.VectorStore
+import org.springframework.core.io.InputStreamResource
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter
+import reactor.core.publisher.Mono
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 import java.util.concurrent.ConcurrentHashMap
 
 
 @Service
 class AiService(
-    private val chatModelHolder: ChatModelHolder,
+    private val chatClientHolder: ChatClientHolder,
     private val chatService: ChatService,
+    private val vectorStore: VectorStore
 ) {
 
     private val log = KotlinLogging.logger { }
@@ -59,14 +73,25 @@ class AiService(
     ) {
 
         //todo refactoring
-        val chatModel = chatModelHolder.getChatModel()
+        val chatClient =
+            chatClientHolder.getChatClient()
 
         // 사용자별 emiiter 가져오기 없으면 만들어내기
-        val emitter = emitters.computeIfAbsent(messageReqDto.clientId) {
-            SseEmitter(sseConnectionTime)
+        val emitter =
+            emitters.computeIfAbsent(messageReqDto.clientId) {
+                SseEmitter(sseConnectionTime)
+            }
+
+        val clientReq = chatClient
+            .prompt(messageReqDto.msg)
+
+        if (messageReqDto.isRag) {
+            clientReq.advisors(QuestionAnswerAdvisor(vectorStore, SearchRequest.builder().build()))
         }
 
-        val aiResponse = chatModel.stream(messageReqDto.msg)
+        val aiResponse =
+            clientReq.stream().content()
+
 
         var accumulated = ""
 
@@ -86,14 +111,7 @@ class AiService(
                 )
             }
             .doOnError { err ->
-                val html =
-                    """<div id="ai-response-div-${uniqueId}" class="my-1 p-1" hx-swap-oob="outerHTML:#ai-response-div-${uniqueId}">${err.message}</div>"""
-                emitter.send(
-                    SseEmitter.event()
-                        .name("ai-response")
-                        .id(uniqueId.toString())
-                        .data(html)
-                )
+                log.error { "Error occurred: ${err.message}" }
             }
             .doOnComplete {
                 //"""<div id="sse-listener" hx-swap-oob="true"></div>"""
@@ -111,7 +129,21 @@ class AiService(
                         .data(finalHtml)
                 )
             }
+            .onErrorResume { err ->
+
+                log.error { "ai response err::${err.message}" }
+                val finalHtml =
+                    """<div id="ai-response-div-${uniqueId}" class="my-1 p-1" hx-swap-oob="outerHTML:#ai-response-div-${uniqueId}">${err.message}</div>"""
+                emitter.send(
+                    SseEmitter.event()
+                        .name("ai-response")
+                        .id(uniqueId.toString())
+                        .data(finalHtml)
+                )
+                Mono.empty()
+            }
             .subscribe()
+
     }
 
     private fun markDownToHtml(chunk: String): String {
@@ -144,5 +176,20 @@ class AiService(
         return emitter
     }
 
+
+    fun addFileToVectorStore(file: MultipartFile): UploadResponseDto {
+        println(file.originalFilename)
+        // 1. InputStreamResource로 변환
+        val resource = InputStreamResource(file.inputStream)
+        // 2. TikaDocumentReader 생성
+        val reader = TikaDocumentReader(resource)
+        //Read and split the document contents
+        val documents: List<Document> = reader.get()
+        val splitDocuments: List<Document> = TokenTextSplitter().apply(documents)
+        vectorStore.add(splitDocuments)
+
+        return UploadResponseDto(file.originalFilename ?: "", file.contentType ?: "", file.size)
+    }
+    
 
 }

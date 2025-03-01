@@ -41,7 +41,7 @@
                         aria-labelledby="dropdown-btn-${chat.getId()}">
                         <li hx-get="/chat/rename/${chat.getId()}" hx-trigger="click"
                             hx-target="#chat-name-div-${chat.getId()}"
-                            hx-swap="outerHTML" hx-ext="debug"
+                            hx-swap="outerHTML"
                             hx-vals='{"name": "${chat.getName()}" } '>
                             <span class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Rename</span>
                         </li>

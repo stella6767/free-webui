@@ -43,6 +43,17 @@ spring:
   ai:
     ollama:
       base-url: http://localhost:11434/
+      embedding:
+        model: nomic-embed-text
+      init:
+        pull-model-strategy: when_missing
+        timeout: 60s
+        max-retries: 1
+      chat:
+        model: qwen2.5-coder:7b
+    chat:
+      client:
+        enabled: false
 
 
   threads:

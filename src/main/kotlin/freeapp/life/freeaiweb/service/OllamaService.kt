@@ -2,12 +2,13 @@ package freeapp.life.freeaiweb.service
 
 
 import freeapp.life.freeaiweb.dto.AIModelDto
-import freeapp.life.freeaiweb.dto.ChatModelHolder
+import freeapp.life.freeaiweb.dto.ChatClientHolder
 import freeapp.life.freeaiweb.dto.OllamaRequestRto
 import freeapp.life.freeaiweb.dto.OllamaResponseRto
 import freeapp.life.freeaiweb.util.isValidURL
 
 import mu.KotlinLogging
+import org.springframework.ai.chat.client.DefaultChatClient
 import org.springframework.ai.ollama.OllamaChatModel
 import org.springframework.ai.ollama.api.OllamaApi
 import org.springframework.stereotype.Service
@@ -17,7 +18,7 @@ import org.springframework.web.client.body
 
 @Service
 class OllamaService(
-    private val chatModelHolder: ChatModelHolder,
+    private val chatClientHolder: ChatClientHolder,
     private val restClient: RestClient,
 ) {
 
@@ -25,13 +26,10 @@ class OllamaService(
 
     fun getModelSetting(): OllamaResponseRto {
 
-        val chatModel =
-            chatModelHolder.getChatModel()
-
         val options =
-            chatModel.defaultOptions
+            chatClientHolder.option
 
-        val ollamaApi = OllamaApi(chatModelHolder.ollamaHost)
+        val ollamaApi = OllamaApi(chatClientHolder.ollamaHost)
 
         val models = ollamaApi.listModels().models.map {
             AIModelDto(
@@ -43,7 +41,7 @@ class OllamaService(
         }
 
         return OllamaResponseRto(
-            host = chatModelHolder.ollamaHost,
+            host = chatClientHolder.ollamaHost,
             models,
             currentModel = options.model ?: "",
             temperature = options.temperature ?: 0.0,
@@ -68,14 +66,13 @@ class OllamaService(
         }
 
         val ollamaApi = OllamaApi(requestRto.host)
+
         val newChatModel = OllamaChatModel.builder()
             .ollamaApi(ollamaApi)
             .defaultOptions(requestRto.toOllamaOption())
             .build()
 
-        chatModelHolder.updateChatModel(newChatModel, requestRto.host)
-
-        println(chatModelHolder.ollamaHost)
+        chatClientHolder.updateChatClient(newChatModel, requestRto.host, requestRto.toOllamaOption())
     }
 
 

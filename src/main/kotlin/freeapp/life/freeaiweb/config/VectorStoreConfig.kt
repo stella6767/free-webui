@@ -13,7 +13,6 @@ class VectorStoreConfig(
 ) {
     @Bean
     fun simpleVectorStore(embeddingModel: EmbeddingModel): VectorStore {
-
         return SimpleVectorStore.builder(embeddingModel).build()
     }
 
