@@ -190,6 +190,6 @@ class AiService(
 
         return UploadResponseDto(file.originalFilename ?: "", file.contentType ?: "", file.size)
     }
-    
+
 
 }

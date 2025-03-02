@@ -3,6 +3,7 @@
 
 https://github.com/user-attachments/assets/42106970-922e-4462-9b90-a9bd3add8af2
 
+[Demo](https://www.youtube.com/watch?v=3MdtaTALZyU&ab_channel=developerkang)
 
 ## Introduction
 
@@ -26,7 +27,9 @@ If you have Ollama installed, and can run a model, you can run this self-hosted 
 - **Ganranteed Privacy**: With the AI model running locally on your hardware and all data processing happening within your own pc(server), your data and conversations never leave your computer, ensuring your privacy.
 - **Offline Accessibility**: Run entirely offline after the initial setup and download, allowing you to engage with AI-powered conversations without an active internet connection.
 - **Server Sent Events (SSE)**: Real-time streaming made easy to LLM interactions.
+- **Local RAG Integration**: You can put documents directly into the chat and interactions with it. 
 - **Open Source and Customizable**: Build and customize your own AI-powered applications with my project.
+ 
 
 
 ## Quickstart 🏁
