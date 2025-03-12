@@ -91,7 +91,25 @@ spring:
       on-profile:
         - local
 
+---
 
+server:
+  config:
+    activate:
+      on-profile:
+        - prod
+
+spring:
+  config:
+    activate:
+      on-profile:
+        - prod
+
+
+gg:
+  jte:
+    usePrecompiledTemplates: true
+    developmentMode: false
 
 ---
 

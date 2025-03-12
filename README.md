@@ -38,7 +38,7 @@ If you have Ollama installed, and can run a model, you can run this self-hosted 
 
 move to release page -> download jar file -> execute terminal command in your local server 
 ```angular2html
-java -jar ${file path}.jar
+java -jar ${file path}.jar --spring.profiles.active=prod
 ```
 Check the http://localhost:8080 port in your browser!
 
