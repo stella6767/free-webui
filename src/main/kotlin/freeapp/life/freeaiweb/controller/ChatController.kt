@@ -32,6 +32,45 @@ class ChatController(
         return "page/index"
     }
 
+    @GetMapping("/test")
+    fun test(): String {
+        return "page/test"
+    }
+
+    @GetMapping("/multi-update")
+    @ResponseBody
+    fun test2(): String {
+
+        val html  = """
+            <div id="header" hx-swap-oob="true">
+                새로운 헤더 내용!
+            </div>           
+            <div id="content2">
+                !!!
+            </div>                       
+        """.trimIndent()
+
+        return  html
+    }
+
+
+    @HxRequest
+    @GetMapping("/multi-update2")
+    @ResponseBody
+    fun test3(): String {
+
+        val html  = """
+            <div id="content" hx-swap-oob="true">
+                새로운 콘텐트 내용!
+            </div>           
+                                  
+        """.trimIndent()
+
+        return  html
+    }
+
+
+
     @HxRequest
     @GetMapping("/")
     fun indexWithHtmx(model: Model, response: HttpServletResponse): FragmentsRendering {
@@ -39,7 +78,6 @@ class ChatController(
         return FragmentsRendering
             .with("component/newChat")
             .fragment("component/titleChatBox")
-
             .build()
     }
 
